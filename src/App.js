@@ -1,68 +1,28 @@
 import React, { Component } from 'react';
+// import { Redirect } from 'react-router-dom'
 // import { observer, inject } from 'mobx-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import axios from 'axios';
+import { Route, Link } from 'react-router-dom'
+import LoginForm from './components/login'
+import Navbar from './components/navbar'
+import Home from './components/home'
+import Registration from './components/registration'
 
 
 class App extends Component {
   constructor() {
     super()
-    this.state = {
-        username: '',
-        password: ''
+    this.state={
+    
     }
-}
-handleChange = (event) => {
-    this.setState({
-        [event.target.name]: event.target.value
-    })
-}
-sendNewUserData = () => {
-  console.log("send", this.state);
-  axios.post('http://localhost:5001/addUser', this.state)
-  .then(response => {
-      if (response.status === 200) {
-          console.log("response",JSON.parse(response));
-        }
-      })
-  .catch(error => {
-      console.log('login error: ')
-      console.log(error);
-  })
-  this.clearInputs();
-}
-
-  
-  clearInputs() {
-    this.setState({ username: "", password: "" });
-}
-getInputs() {
-    return (<div>
-        <h2>Registration</h2>
-        <FontAwesomeIcon style={{ color: "blue" }} className="fas" icon={faGlobe} size="6x" />
-        <br />
-        <label>
-            Name:
-    <input type="text" type="text" id="username" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
-        </label><br />
-        <label>
-            password:
-    <input type="password" type="password" id="password" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
-        </label>
-        <button type="button" onClick={this.sendNewUserData}>Registration</button>
-    </div>)
-}
- 
+  }
   render() {
     return (
       <div className="App">
-        <div className="title t-font">Log In</div>
-                {this.getInputs()}
-        {/* {this.props.store.addChildBox ?
-       <AddChild id={this.props.store.currentIdForAddChild} /> : null } */}
+        <div className="title t-font"></div>
+      <LoginForm />
+      <Registration />
       </div>
     );
   }
