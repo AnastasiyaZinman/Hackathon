@@ -1,0 +1,26 @@
+.modal-body{
+  position: absolute;
+  margin-top: -20%;
+  margin-left: 30%;
+  width:500px;
+  z-index: 20;
+  background-color:white;
+  box-shadow: 5px 5px 5px grey;
+  border-radius: 10px;
+    border: 1px solid rgb(44, 44, 44);
+}
+.col-w{
+  margin-top:20px;
+}
+.btn-update{
+width:130px;
+background-color: #28a745;
+border: none ;
+color: white;
+}
+.btn-update:hover{
+  background-color: #1c7b32;
+}
+.btn-update:checked{
+  background-color: #1fd254;
+}
