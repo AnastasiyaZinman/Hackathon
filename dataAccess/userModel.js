@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../dataAccess/da');
-const User = sequelize.define('user', {
+const User = sequelize.define('User', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -15,8 +15,11 @@ password: {
     type: Sequelize.STRING,
     notNull: true
 }
+},
+{
+    timestamps: false
 });
-const Record = sequelize.define('record', {
+const Record = sequelize.define('Record', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,

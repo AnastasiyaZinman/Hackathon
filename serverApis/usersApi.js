@@ -2,28 +2,22 @@
 const express = require('express')
 //---------------------------------------
 const router = express.Router()
-const { Person, Parent } = require('../dataAccess/userModel');
+const { User, Record } = require('../dataAccess/userModel');
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
 //----------------Post-------------------
 //Add new user
-//Add new user
 router.post('/addUser', jsonParser,async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     console.log("here", req.body);
     User.create({
-        name: req.body.name,
+        name: req.body.username,
         password: req.body.password
     })
-        .then((users) => {
-            Parent.create({
-                personId: users.id,
-                parentId: req.body.parentId
-            }).then((data)=>{
+        .then((data) => {
                 res.json(data)
-            })
-        }) 
+        })
         .error((err) => {
             res.status(500).send(err);
         })
@@ -31,25 +25,25 @@ router.post('/addUser', jsonParser,async (req, res) => {
 })
 //----------------Get-------------------
 
-router.get('/getUsers', async (req, res) => {
-    Person.findAll()
-        .then(users => res.json(users))
-})
+// router.get('/getUsers', async (req, res) => {
+//     Person.findAll()
+//         .then(users => res.json(users))
+// })
 
-router.get('/getChildren/:id', async (req, res) => {
-    userId = req.params.id;
-    console.log("userId", userId);
-    Person.find({
-        include: [{ model: Person, as: "Children" }],
-        where: { id: userId }
-    })
-        .then((users) => {
-            res.json(users)
-        })
-        .error((err) => {
-            res.status(500).send(err);
-        })
-})
+// router.get('/getChildren/:id', async (req, res) => {
+//     userId = req.params.id;
+//     console.log("userId", userId);
+//     Person.find({
+//         include: [{ model: Person, as: "Children" }],
+//         where: { id: userId }
+//     })
+//         .then((users) => {
+//             res.json(users)
+//         })
+//         .error((err) => {
+//             res.status(500).send(err);
+//         })
+// })
 
 
 

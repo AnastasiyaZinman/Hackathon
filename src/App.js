@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 // import { observer, inject } from 'mobx-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
-// import axios from 'axios';
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-// import axios from 'axios';
+import axios from 'axios';
 
 
 class App extends Component {
@@ -22,9 +21,20 @@ handleChange = (event) => {
     })
 }
 sendNewUserData = () => {
-
-  console.log(this.state)
+  console.log("send", this.state);
+  axios.post('http://localhost:5001/addUser', this.state)
+  .then(response => {
+      if (response.status === 200) {
+          console.log("response",JSON.parse(response));
+        }
+      })
+  .catch(error => {
+      console.log('login error: ')
+      console.log(error);
+  })
+  this.clearInputs();
 }
+
   
   clearInputs() {
     this.setState({ username: "", password: "" });
