@@ -12,72 +12,73 @@ const saltRounds = 10;
 //Add new user
 router.post('/addUser', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
+    console.log("username", req.body.username);
+    User.findOne({ where: { name: req.body.username } })
+        .then(user => {
+            console.log("user", user);
+            if (!user) {
+                bcrypt.genSalt(saltRounds, function (err, salt) {
+                    bcrypt.hash(req.body.password, salt)
+                        .then(function (hash) {
+                            console.log("here", hash);
+                            User.create({
+                                name: req.body.username,
+                                password: hash,
+                            })
+                                .then((data) => {
+                                    res.json(data)
+                                })
+                                .error((err) => {
+                                    res.status(500).send(err);
+                                })
 
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-        bcrypt.hash(req.body.password, salt)
-        .then(function(hash) {
-            console.log("here", hash);
-            User.create({
-                name: req.body.username,
-                password: hash,
-            })
-             .then((data) => {
-                    res.json(data)
-            })
-             .error((err) => {
-                    res.status(500).send(err);
-             })
-
-        });
-    });
+                        });
+                });
+            }
+            else {
+                res.send("already exist");
+            }
+        })
 
 })
 //----------------LogIn----------------
 router.post('/logIn', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
-
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-        bcrypt.hash(req.body.password, salt, function (err, hash) {
-
-            console.log("here", hash);
-            User.create({
-                name: req.body.username,
-                password: hash,
-
-            })
-                .then((data) => {
-                    res.json(data)
+    console.log("username", req.body.username);
+    User.findOne({
+        where: {
+            name: req.body.username,
+        }
+    })
+        .then((user) => {
+            console.log("data", user);
+            res.json(user)
+            if (user) {
+                console.log("req.body.password", req.body.password);
+                console.log("user.data.password", user.dataValues.password);
+                bcrypt.compare(req.body.password, user.dataValues.password, function(err, isPasswordMatch) {   
+                    err == null ?
+                        console.log(isPasswordMatch) :
+                        console.log(err);
                 })
-                .error((err) => {
-                    res.status(500).send(err);
-                })
+            // bcrypt.compare(req.body.password, user.dataValues.password)
+            //     .then((data) => {
+            //         user("result of compare",data)
+            //         // res.json(users)
+            //     .error((err) => {
+            //         res.status(500).send(err);
+            //     })
 
+            //     })
+            // .error((err) => {
+            //    res.status(500).send(err);
+            // })
+        }
+        else res.send("user doesn't exist");
         });
     });
 
-})
-//----------------LOgIn--------------
-router.post('/logIn', jsonParser, async (req, res) => {
-    if (!req.body) return res.sendStatus(400);
-    User.find({
-        include: [{ model: Record, as: "Record" }],
-        where: { password: req.body.password }
-    })
-        .then((users) => {
-            bcrypt.compare(req.body.password,users.password)
-            .then((data) => {
-                res.json(users)
-            })
-            .error((err) => {
-                res.status(500).send(err);
-            })
-            
-        })
-        .error((err) => {
-            res.status(500).send(err);
-        })
-    }
-)
+
 
 //----------------Get-------------------
 
