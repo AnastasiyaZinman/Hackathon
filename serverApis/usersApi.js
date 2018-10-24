@@ -15,27 +15,25 @@ router.post('/addUser', jsonParser, async (req, res) => {
     console.log("username", req.body.username);
     User.findOne({ where: { name: req.body.username } })
         .then(user => {
-            console.log("user", user);
+            // console.log("user", user);
             if (!user) {
-                bcrypt.genSalt(saltRounds, function (err, salt) {
-                    bcrypt.hash(req.body.password, salt)
-                        .then(function (hash) {
-                            console.log("here", hash);
-                            User.create({
-                                name: req.body.username,
-                                password: hash,
-                            })
-                                .then((data) => {
-                                    res.json(data)
-                                })
-                                .error((err) => {
-                                    res.status(500).send(err);
-                                })
-
-                        });
+                bcrypt.hash(req.body.password, 10, function (err, hash) {
+                    if (err) { throw (err); }
+                    console.log("here", hash);
+                    User.create({
+                        name: req.body.username,
+                        password: hash,
+                    })
+                        .then((data) => {
+                            res.json(data)
+                        })
+                        .error((err) => {
+                            res.status(500).send(err);
+                        })
                 });
             }
             else {
+                console.log("already exist")
                 res.send("already exist");
             }
         })
@@ -52,31 +50,24 @@ router.post('/logIn', jsonParser, async (req, res) => {
     })
         .then((user) => {
             console.log("data", user);
-            res.json(user)
+            // res.json(user)
             if (user) {
                 console.log("req.body.password", req.body.password);
                 console.log("user.data.password", user.dataValues.password);
-                bcrypt.compare(req.body.password, user.dataValues.password, function(err, isPasswordMatch) {   
-                    err == null ?
-                        console.log(isPasswordMatch) :
+                bcrypt.compare(req.body.password, user.dataValues.password, function (err, isPasswordMatch) {
+                    console.log(isPasswordMatch);
+                    if(isPasswordMatch) {
+                        res.json(user)
+                       } else {
+                        // Passwords don't match
                         console.log(err);
+                       } 
                 })
-            // bcrypt.compare(req.body.password, user.dataValues.password)
-            //     .then((data) => {
-            //         user("result of compare",data)
-            //         // res.json(users)
-            //     .error((err) => {
-            //         res.status(500).send(err);
-            //     })
-
-            //     })
-            // .error((err) => {
-            //    res.status(500).send(err);
-            // })
-        }
-        else res.send("user doesn't exist");
+            
+            }
+            else res.send("user doesn't exist");
         });
-    });
+});
 
 
 
