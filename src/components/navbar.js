@@ -9,10 +9,7 @@ class Navbar extends Component {
         //Conditional render of nav bar
         return (
             <header>
-                {loggedIn ? ( 
-                        <Link to="#" className="btn btn-link text-secondary" onClick={this.props.logout}>
-                            <span className="text-secondary">logout</span></Link> 
-                ) : (
+                {!loggedIn ? (
                         <div>
                             <Link to="/" className="btn btn-link text-secondary">
                                 <span className="text-secondary">home</span>
@@ -25,9 +22,10 @@ class Navbar extends Component {
                             <Link to="/signup" className="btn btn-link text-secondary">
                                 <span className="text-secondary">signup</span>
                             </Link>
-                        </div>
-                    )}
-            </header>
+                        </div>)
+                    
+                : null}
+             </header>
         );
 
     }
