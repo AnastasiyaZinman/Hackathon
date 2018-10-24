@@ -59,6 +59,7 @@ router.post('/logIn', jsonParser, async (req, res) => {
                     if(isPasswordMatch) {
                         res.json(user)
                        } else {
+                           res.send(false);
                         // Passwords don't match
                         console.log(err);
                        } 

@@ -14,10 +14,20 @@ import Registration from './components/registration'
 class App extends Component {
   constructor() {
     super()
-    this.state={
-    
-    }
+    this.state = {
+      username: '',
+      id: -1,
+      password: '',
+      loggedIn: false 
+    } 
   }
+  updateUser =(obj) =>{
+    this.setState({
+    loggedIn: obj.loggedIn,
+    id: obj.id,
+    username: obj.username
+})
+} 
   render() {
     return (
       <Router>

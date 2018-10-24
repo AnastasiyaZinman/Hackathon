@@ -6,8 +6,6 @@ class LoginForm extends Component {
     constructor() {
         super()
         this.state = {
-            username: '',
-            password: '',
             redirectTo: null
         }
     }
@@ -29,19 +27,27 @@ class LoginForm extends Component {
             .then(response => {
                 if (response.status === 200) {
                   console.log("login",response);
-                    // localStorage.setItem("token", JSON.stringify(response.data.token));
-                    // this.props.updateUser({
-                    //     loggedIn: true,
-                    //     username: JSON.parse(response.config.data).username
-                    // })
-                    // this.setState({
-                    //     redirectTo: '/mainDashBoard'
-                    // })
+                   if(response.data!=="user doesn't exist"){
+                       console.log("here");
+                    this.props.updateUser(
+                        {
+                        loggedIn: true,
+                        id: response.data.id,
+                        username: response.data.name
+                    })
+                    this.setState({
+                        redirectTo: '/main'
+                    })
                 }
-            }).catch(error => {
-                console.log('login error: ')
-                console.log(error);
+                else{
+                    console.log("wrong login or password");
+                }
+                }
             })
+            // .catch(error => {
+            //     console.log('login error: ')
+            //     console.log(error);
+            // })
     }
 
     render() {
