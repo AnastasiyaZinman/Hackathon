@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 // import { observer, inject } from 'mobx-react';
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Route, Link } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Link } from 'react-router-dom'
+import Main from './components/main/Main'
 import LoginForm from './components/login'
 import Navbar from './components/navbar'
 import Home from './components/home'
@@ -19,11 +20,17 @@ class App extends Component {
   }
   render() {
     return (
+      <Router>
       <div className="App">
+      
         <div className="title t-font"></div>
-      <LoginForm />
-      <Registration />
+        <Navbar logout={this.logout} loggedIn={this.state.loggedIn} />  
+        <Route exact path="/" component={Home} />
+        <Route path="/signup" render={() => <Registration updateUser={this.updateUser} />}/>
+        <Route path="/login" render={() => <LoginForm updateUser={this.updateUser} />}/>
+        <Route path="/main" render={() => <Main/>}/> 
       </div>
+      </Router>
     );
   }
 }
