@@ -4,7 +4,10 @@ import moment, { updateLocale } from 'moment';
 import axios from 'axios'
 import AddForm from './AddForm';
 import './Main.css';
-import { DATA } from './init-data';
+// import { DATA } from './init-data';
+import loader from '../img/money-loader.gif';
+// import loader from '../img/loading.gif';
+
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleLeft, faAngleRight, faCheck, faWindowClose } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +21,8 @@ class Main extends Component {
     super()
     this.fields = ["Date", "Type", "Category", "Method", "Amount", "Currency", "Comments"]
     this.state = {
-      allRecords: [],
+      isLoading: true,
+      allRecords: "",
       records: [],
       textTosearch: "",
       searchType: "comment",
@@ -69,10 +73,20 @@ class Main extends Component {
     axios.get(`http://localhost:5001/getData/${userId}`)
 			.then(result => {
 				console.log(result.data[0].record);
-				this.setState({allRecords:result.data[0].record})
+        this.setState({allRecords:result.data[0].record});
+        this.setState({isLoading: false})
 		})
 	}
-
+  _show() {
+    // Don't forget that loading can be any data type you want!
+    if (this.state.isLoading) {
+      return (
+        <div className="loading">
+          <img src={loader} />
+        </div>
+      );
+    } 
+  }
   
 
   showHeader = () => <div id="grid-header">
@@ -136,7 +150,7 @@ class Main extends Component {
     
   render() {
     let { records, startIndex, endIndex, lastPage } = this.getCurrentRecords()
-    console.log(records)
+    // console.log(records)
     return (
       <div className="App">
         {this.showNavBar()}
@@ -145,8 +159,10 @@ class Main extends Component {
             {this.showSearchBar()}
             {this.showPagination(startIndex, endIndex, lastPage)}
           </div>
+         
           {this.renderRecords(records)}
-          {this.state.showAddForm ? <AddForm /> : null}
+          {this.state.showAddForm ? <AddForm /> : null} 
+          {this._show()}
         </div>
         {/* <button type="button" onClick={this.getDataFromDB}>getData</button> */}
       </div>

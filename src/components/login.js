@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 
 class LoginForm extends Component {
@@ -33,7 +33,6 @@ class LoginForm extends Component {
                 if (response.status === 200) {
                   console.log("login",response);
                    if(response.data!==false){
-                       console.log("here");
                     this.props.updateUser(
                         {
                         loggedIn: true,
