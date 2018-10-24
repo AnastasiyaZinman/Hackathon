@@ -32,13 +32,12 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-      
         <div className="title t-font"></div>
         <Navbar logout={this.logout} loggedIn={this.state.loggedIn} />  
         <Route exact path="/" component={Home} />
         <Route path="/signup" render={() => <Registration updateUser={this.updateUser} />}/>
         <Route path="/login" render={() => <LoginForm updateUser={this.updateUser} />}/>
-        <Route path="/main" render={() => <Main/>}/> 
+        <Route path="/main" render={() => <Main logout={this.logout} loggedIn={this.state.loggedIn}/>}/> 
       </div>
       </Router>
     );

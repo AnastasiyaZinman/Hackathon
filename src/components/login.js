@@ -6,7 +6,9 @@ class LoginForm extends Component {
     constructor() {
         super()
         this.state = {
-            redirectTo: null
+            redirectTo: null,
+            username: '',
+            password:''
         }
     }
 
@@ -14,6 +16,9 @@ class LoginForm extends Component {
         this.setState({
             [event.target.name]: event.target.value
         })
+    }
+    clear(){
+        this.setState({username:'',password:''})
     }
 
     handleSubmit = (event) => {
@@ -27,7 +32,7 @@ class LoginForm extends Component {
             .then(response => {
                 if (response.status === 200) {
                   console.log("login",response);
-                   if(response.data!=="user doesn't exist"){
+                   if(response.data!==false){
                        console.log("here");
                     this.props.updateUser(
                         {
@@ -40,7 +45,9 @@ class LoginForm extends Component {
                     })
                 }
                 else{
+                    alert("wrong login or password");
                     console.log("wrong login or password");
+                    this.clear()
                 }
                 }
             })
@@ -61,11 +68,11 @@ class LoginForm extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             Name:
-                            <input type="text" type="text" id="usernameLogIn" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
+                            <input type="text"  id="usernameLogIn" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
                         </label>
                         <label>
                             password:
-                            <input type="password" type="password" id="passwordLogIn" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
+                            <input type="password" id="passwordLogIn" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
                         </label>
                         <input type="submit" value="Submit" />
                     </form>
