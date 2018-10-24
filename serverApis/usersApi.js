@@ -2,7 +2,7 @@
 const express = require('express')
 //---------------------------------------
 const router = express.Router()
-const { User, Record } = require('../dataAccess/userModel');
+const { User, Record, Category, PaymentMethod } = require('../dataAccess/userModel');
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 //--------------------------------------
@@ -64,13 +64,10 @@ router.post('/logIn', jsonParser, async (req, res) => {
                         console.log(err);
                        } 
                 })
-            
             }
             else res.send("user doesn't exist");
         });
 });
-
-
 
 // ----------------Get-------------------
 
@@ -87,7 +84,13 @@ router.get('/getData/:id', async (req, res) => {
         include: [{
           model: Record,
           as: "record",
-
+          include: [{
+            model: Category
+          }],
+          include: [{
+              attributes:['name'],
+            model: PaymentMethod
+          }]
         }],
         where: { id: userId }
       }).then(user => {
@@ -98,19 +101,21 @@ router.get('/getData/:id', async (req, res) => {
         res.status(500).send(err)
       })
      })
-    // Record.find({
-    //     include: [{ model: User, as: "User" }],
-    //     where: { userId: userId }
-    // })
-    //     .then((users) => {
-    //         res.json(users)
-    //     })
-    //     .error((err) => {
-    //         res.status(500).send(err);
-    // })
-// })
-
-
+    //  User.findAll({
+    //     attributes: ['id', 'name'],
+    //     include: [{
+    //       model: Record,
+    //       as: "record",
+    //     }],
+    //     where: { id: userId }
+    //   }).then(user => {
+    //     res.send(user)
+     
+    //   }).error((err) => {
+    //     console.error(err);
+    //     res.status(500).send(err)
+    //   })
+    //  })
 
 // const addRelationship = async function () {
 //     let person = await Person.create({ name: "Target" })

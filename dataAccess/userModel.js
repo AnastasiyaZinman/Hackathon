@@ -7,18 +7,18 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         notNull: true
     },
-name: {
-    type: Sequelize.STRING,
-    notNull: true
+    name: {
+        type: Sequelize.STRING,
+        notNull: true
+    },
+    password: {
+        type: Sequelize.STRING,
+        notNull: true
+    }
 },
-password: {
-    type: Sequelize.STRING,
-    notNull: true
-}
-},
-{
-    timestamps: false
-});
+    {
+        timestamps: false
+    });
 const Record = sequelize.define('Record', {
     id: {
         type: Sequelize.INTEGER,
@@ -57,11 +57,52 @@ const Record = sequelize.define('Record', {
     comment: {
         type: Sequelize.STRING
     },
-    },
+},
     {
         timestamps: false
     });
 
-User.hasMany(Record, {foreignKey: 'userId', sourceKey: 'id'  , as:"record"});
-module.exports = {User : User, Record : Record};
+const Category = sequelize.define('Category', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        notNull: true
+    },
+    name: {
+        type: Sequelize.STRING,
+        notNull: true
+    },
+    type: {
+        type: Sequelize.INTEGER,
+        notNull: true
+    },
+    Icon: {
+        type: Sequelize.STRING
+    }
+},
+    {
+        timestamps: false
+    });
+const PaymentMethod = sequelize.define('PaymentMethod', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        notNull: true
+    },
+    name: {
+        type: Sequelize.STRING,
+        notNull: true
+    }
+},
+    {
+        timestamps: false
+    });
+User.hasMany(Record, { foreignKey: 'userId', sourceKey: 'id', as: "record" });
+Category.hasMany(Record, { foreignKey: 'categoryId', sourceKey: 'id', as: "category" });
+Record.hasOne(Category, { foreignKey: 'id', sourceKey: 'categoryId' })
+PaymentMethod.hasMany(Record, { foreignKey: 'paymentMethodId', sourceKey: 'id' });
+Record.hasOne(PaymentMethod, { foreignKey: 'id', sourceKey: 'paymentMethodId' })
+module.exports = { User: User, Record: Record, Category: Category, PaymentMethod: PaymentMethod };
 
