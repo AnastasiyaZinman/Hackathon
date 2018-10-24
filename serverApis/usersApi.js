@@ -88,10 +88,14 @@ router.get('/getData/:id', async (req, res) => {
             attributes: ['name','Icon'],
             model: Category,
             as: "category"
+          },{
+            attributes: ['name'],
+            model: PaymentMethod,
+            as: "payment"
           }]
         //   ,
         //   include: [{
-        //       attributes:['name'],
+        //     attributes:['name'],
         //     model: PaymentMethod,
         //     as: "payment"
         //   }]
