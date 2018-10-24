@@ -85,12 +85,16 @@ router.get('/getData/:id', async (req, res) => {
           model: Record,
           as: "record",
           include: [{
-            model: Category
-          }],
-          include: [{
-              attributes:['name'],
-            model: PaymentMethod
+            attributes: ['name','Icon'],
+            model: Category,
+            as: "category"
           }]
+        //   ,
+        //   include: [{
+        //       attributes:['name'],
+        //     model: PaymentMethod,
+        //     as: "payment"
+        //   }]
         }],
         where: { id: userId }
       }).then(user => {

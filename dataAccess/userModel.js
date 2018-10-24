@@ -100,9 +100,13 @@ const PaymentMethod = sequelize.define('PaymentMethod', {
         timestamps: false
     });
 User.hasMany(Record, { foreignKey: 'userId', sourceKey: 'id', as: "record" });
-Category.hasMany(Record, { foreignKey: 'categoryId', sourceKey: 'id', as: "category" });
-Record.hasOne(Category, { foreignKey: 'id', sourceKey: 'categoryId' })
+Category.hasMany(Record, { foreignKey: 'categoryId', sourceKey: 'id' });
+// Record.hasOne(Category, { foreignKey: 'id', sourceKey: 'categoryId' })
+Record.belongsTo(Category, { foreignKey: 'categoryId', sourceKey: 'id',as: "category"})
+
 PaymentMethod.hasMany(Record, { foreignKey: 'paymentMethodId', sourceKey: 'id' });
-Record.hasOne(PaymentMethod, { foreignKey: 'id', sourceKey: 'paymentMethodId' })
+// Record.hasOne(PaymentMethod, { foreignKey: 'id', sourceKey: 'paymentMethodId' })
+Record.belongsTo(PaymentMethod, { foreignKey: 'paymentMethodId', sourceKey: 'id',as: "payment" })
+
 module.exports = { User: User, Record: Record, Category: Category, PaymentMethod: PaymentMethod };
 
