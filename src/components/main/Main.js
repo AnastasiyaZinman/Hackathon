@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import moment, { updateLocale } from 'moment';
-
+import axios from 'axios'
 import AddForm from './AddForm';
 import './Main.css';
 import { DATA } from './init-data';
@@ -41,7 +41,7 @@ class Main extends Component {
   }
 
   add = () => {
-    this.setState ({ showAddForm: true })
+    this.setState({ showAddForm: true })
   }
   /*
   editName = (id) => {
@@ -59,6 +59,18 @@ class Main extends Component {
 
   closeUpdatePopup = () => this.setState({ showUpdatePopup: false })
   */
+  getDataFromDB() {
+    let userId=1;//this.props.id;
+    axios.get(`http://localhost:5001/getData/${userId}`)
+			.then(result => {
+				console.log(result.data);
+				// this.parent=result.data;
+				// this.children=result.data["Children"];
+				// console.log("this children",result.data["Children"]);
+		})
+	}
+
+  
 
   showHeader = () => <div id="grid-header">
     {this.fields.map((f, i) => <div key={i}>{f}</div>)}
@@ -101,23 +113,24 @@ class Main extends Component {
   }
 
   renderRecords = (records) =>
-  <div id="grid-container">
-    {this.showHeader()}
-    {records.map(c => {
-      let date = moment(c.date).format("MM/DD/YY")
-      return (
-        <div className="item" key={c.id} onClick={() => this.editName(c.id)}>
-          <div>{date}</div>
-          <div>{c.type}</div>
-          <div>{c.categoryId}</div>
-          <div>{c.paymentMethodId}</div>
-          <div>{c.amount}</div>
-          <div>{c.currency}</div>
-          <div>{c.comment}</div>
-        </div>)
-    })}
-  </div>
+    <div id="grid-container">
+      {this.showHeader()}
+      {records.map(c => {
+        let date = moment(c.date).format("MM/DD/YY")
+        return (
+          <div className="item" key={c.id} onClick={() => this.editName(c.id)}>
+            <div>{date}</div>
+            <div>{c.type}</div>
+            <div>{c.categoryId}</div>
+            <div>{c.paymentMethodId}</div>
+            <div>{c.amount}</div>
+            <div>{c.currency}</div>
+            <div>{c.comment}</div>
+          </div>)
+      })}
+    </div>
 
+    
   render() {
     let { records, startIndex, endIndex, lastPage } = this.getCurrentRecords()
     console.log(records)
@@ -130,8 +143,9 @@ class Main extends Component {
             {this.showPagination(startIndex, endIndex, lastPage)}
           </div>
           {this.renderRecords(records)}
-          {this.state.showAddForm ? <AddForm/> : null}
+          {this.state.showAddForm ? <AddForm /> : null}
         </div>
+        <button type="button" onClick={this.getDataFromDB}>getData</button>
       </div>
     )
   }

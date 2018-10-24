@@ -38,11 +38,11 @@ const Record = sequelize.define('Record', {
         type: Sequelize.STRING,
         notNull: true
     },
-    category: {
+    categoryId: {
         type: Sequelize.INTEGER,
         notNull: true
     },
-    payment: {
+    paymentMethodId: {
         type: Sequelize.SMALLINT,
         notNull: true
     },
@@ -57,8 +57,11 @@ const Record = sequelize.define('Record', {
     comment: {
         type: Sequelize.STRING
     },
+    },
+    {
+        timestamps: false
     });
 
-User.hasMany(Record, {foreignKey: 'userId', sourceKey: 'id' });
+User.hasMany(Record, {foreignKey: 'userId', sourceKey: 'id'  , as:"record"});
 module.exports = {User : User, Record : Record};
 

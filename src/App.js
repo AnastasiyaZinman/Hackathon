@@ -37,7 +37,7 @@ class App extends Component {
         <Route exact path="/" component={Home} />
         <Route path="/signup" render={() => <Registration updateUser={this.updateUser} />}/>
         <Route path="/login" render={() => <LoginForm updateUser={this.updateUser} />}/>
-        <Route path="/main" render={() => <Main logout={this.logout} loggedIn={this.state.loggedIn}/>}/> 
+        <Route path="/main" render={() => <Main logout={this.logout} loggedIn={this.state.loggedIn} id={this.state.id}/>}/> 
       </div>
       </Router>
     );

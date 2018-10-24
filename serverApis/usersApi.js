@@ -72,26 +72,42 @@ router.post('/logIn', jsonParser, async (req, res) => {
 
 
 
-//----------------Get-------------------
+// ----------------Get-------------------
 
 // router.get('/getUsers', async (req, res) => {
 //     Person.findAll()
 //         .then(users => res.json(users))
 // })
 
-// router.get('/getChildren/:id', async (req, res) => {
-//     userId = req.params.id;
-//     console.log("userId", userId);
-//     Person.find({
-//         include: [{ model: Person, as: "Children" }],
-//         where: { id: userId }
-//     })
-//         .then((users) => {
-//             res.json(users)
-//         })
-//         .error((err) => {
-//             res.status(500).send(err);
-//         })
+router.get('/getData/:id', async (req, res) => {
+    userId = req.params.id;
+    console.log("userId", userId);
+    User.findAll({
+        attributes: ['id', 'name'],
+        include: [{
+          model: Record,
+          as: "record",
+
+        }],
+        where: { id: userId }
+      }).then(user => {
+        res.send(user)
+     
+      }).error((err) => {
+        console.error(err);
+        res.status(500).send(err)
+      })
+     })
+    // Record.find({
+    //     include: [{ model: User, as: "User" }],
+    //     where: { userId: userId }
+    // })
+    //     .then((users) => {
+    //         res.json(users)
+    //     })
+    //     .error((err) => {
+    //         res.status(500).send(err);
+    // })
 // })
 
 
