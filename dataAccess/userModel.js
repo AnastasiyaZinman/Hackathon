@@ -106,7 +106,7 @@ Record.belongsTo(Category, { foreignKey: 'categoryId', sourceKey: 'id',as: "cate
 
 PaymentMethod.hasMany(Record, { foreignKey: 'paymentMethodId', sourceKey: 'id' });
 // Record.hasOne(PaymentMethod, { foreignKey: 'id', sourceKey: 'paymentMethodId' })
-Record.belongsTo(PaymentMethod, { foreignKey: 'paymentMethodId', sourceKey: 'id',as: "payment" })
+Record.belongsTo(PaymentMethod, { foreignKey: 'paymentMethodId', sourceKey: 'id',as: "paymentMethod" })
 
 module.exports = { User: User, Record: Record, Category: Category, PaymentMethod: PaymentMethod };
 

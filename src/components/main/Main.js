@@ -18,7 +18,7 @@ class Main extends Component {
     super()
     this.fields = ["Date", "Type", "Category", "Method", "Amount", "Currency", "Comments"]
     this.state = {
-      allRecords: DATA,
+      allRecords: [],
       records: [],
       textTosearch: "",
       searchType: "comment",
@@ -28,6 +28,10 @@ class Main extends Component {
       showAddForm: false
       //recordToChange: -1 // id of the record to change in popup form or -1 if none
     }
+  }
+ 
+  componentDidMount() {
+    this.getDataFromDB();
   }
 
   changeInput = (event) => this.setState({
@@ -43,6 +47,7 @@ class Main extends Component {
   add = () => {
     this.setState({ showAddForm: true })
   }
+
   /*
   editName = (id) => {
     let showUpdatePopup = !this.state.showUpdatePopup
@@ -63,10 +68,8 @@ class Main extends Component {
     let userId=1;//this.props.id;
     axios.get(`http://localhost:5001/getData/${userId}`)
 			.then(result => {
-				console.log(result.data);
-				// this.parent=result.data;
-				// this.children=result.data["Children"];
-				// console.log("this children",result.data["Children"]);
+				console.log(result.data[0].record);
+				this.setState({allRecords:result.data[0].record})
 		})
 	}
 
@@ -120,9 +123,9 @@ class Main extends Component {
         return (
           <div className="item" key={c.id} onClick={() => this.editName(c.id)}>
             <div>{date}</div>
-            <div>{c.type}</div>
-            <div>{c.categoryId}</div>
-            <div>{c.paymentMethodId}</div>
+            <div>{(c.type)?"expense":"income"}</div>
+            <div>{c.category.name}</div>
+            <div>{c.paymentMethod.name}</div>
             <div>{c.amount}</div>
             <div>{c.currency}</div>
             <div>{c.comment}</div>
@@ -145,7 +148,7 @@ class Main extends Component {
           {this.renderRecords(records)}
           {this.state.showAddForm ? <AddForm /> : null}
         </div>
-        <button type="button" onClick={this.getDataFromDB}>getData</button>
+        {/* <button type="button" onClick={this.getDataFromDB}>getData</button> */}
       </div>
     )
   }

@@ -91,14 +91,8 @@ router.get('/getData/:id', async (req, res) => {
           },{
             attributes: ['name'],
             model: PaymentMethod,
-            as: "payment"
+            as: "paymentMethod"
           }]
-        //   ,
-        //   include: [{
-        //     attributes:['name'],
-        //     model: PaymentMethod,
-        //     as: "payment"
-        //   }]
         }],
         where: { id: userId }
       }).then(user => {
