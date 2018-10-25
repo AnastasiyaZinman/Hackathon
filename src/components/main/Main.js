@@ -57,7 +57,23 @@ class Main extends Component {
 			.then(result => {
 				console.log(result);
         // this.setState({allRecords:result.data[0].record});
-		})
+    })
+    .catch(function (error) {
+      // alert("Sorry, something wrong. New client haven't added.");
+      console.log(error);
+    });
+    
+  }
+  deleteRequests(link, id){
+    console.log(link,id);
+    axios.delete(`http://localhost:5001/delete/${link}/${id}`)
+    .then(result => {
+      console.log(result);
+      // this.setState({allRecords:result.data[0].record});
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
   }
   putRequests(link, data){
     axios.put(`http://localhost:5001/${link}`, data, {
@@ -105,10 +121,7 @@ class Main extends Component {
 
   add = () => {
     this.setState({ showAddForm: true })
-  }
-
-  
-  
+  }  
   _show() {
     // Don't forget that loading can be any data type you want!
     if (this.state.isLoading) {
@@ -136,6 +149,14 @@ class Main extends Component {
   }
   getCategories = () => {
     this.getRequests("categories");
+  }
+  deleteRecord = () =>{
+    let id=10;
+   this.deleteRequests("record", id);
+  }
+  deleteCategory= () =>{
+    let id=8;
+   this.deleteRequests("category", id);
   }
   updateCategories = () => {
     this.putRequests("category",{id: 13, name:"sport", type:0, Icon:"faSport"});
@@ -230,8 +251,10 @@ class Main extends Component {
           {this.state.showAddForm ? <AddForm /> : null} 
           {this._show()}
         </div>
+        <button type="button" onClick={this.deleteCategory}>deleteCategory</button>
+        
+        {/* <button type="button" onClick={this.deleteRecord}>deleteRecord</button> */}
         <button type="button" onClick={this.updateRecord}>updateRecord</button>
-
         {/* <button type="button" onClick={this.addRecord}>addRecord</button> */}
         {/* <button type="button" onClick={this.updateCategories}>updateCategory</button> */}
         {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}

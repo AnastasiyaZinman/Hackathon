@@ -43,59 +43,59 @@ router.post('/category', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     console.log("new category", req.body);
     Category.create(req.body)
-             .then((data)=>{
-                res.json(data)
-            })
-            .error((err) => {
-                res.status(500).send(err);
-        })      
+        .then((data) => {
+            res.json(data)
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
 });
 router.post('/record', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     console.log("new record", req.body);
     Record.create(req.body)
-             .then((data)=>{
-                res.json(data)
-            })
-            .error((err) => {
-                res.status(500).send(err);
-        })      
+        .then((data) => {
+            res.json(data)
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
 });
 
 router.put('/category', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     // console.log("update", req.body);
-   Category.findOne({ where: { id: req.body.id } })
-            .then((row)=>{
-                // console.log("row",row);
+    Category.findOne({ where: { id: req.body.id } })
+        .then((row) => {
+            // console.log("row",row);
             row.update(req.body)
-            .then((data)=>{
-                res.json(data)
-            })
-            .error((err) => {
-                res.send("error");
-            })     
-           })
-            .error((err) => {
-                res.status(500).send(err);
-            })      
+                .then((data) => {
+                    res.json(data)
+                })
+                .error((err) => {
+                    res.send("error");
+                })
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
 });
 router.put('/record', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     // console.log("update", req.body);
-   Record.findOne({ where: { id: req.body.id } })
-            .then((row)=>{
+    Record.findOne({ where: { id: req.body.id } })
+        .then((row) => {
             row.update(req.body)
-            .then((data)=>{
-                res.json(data)
-            })
-            .error((err) => {
-                res.send("error");
-            })     
-           })
-            .error((err) => {
-                res.status(500).send(err);
-            })      
+                .then((data) => {
+                    res.json(data)
+                })
+                .error((err) => {
+                    res.send("error");
+                })
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
 });
 //----------------LogIn----------------
 router.post('/logIn', jsonParser, async (req, res) => {
@@ -126,7 +126,39 @@ router.post('/logIn', jsonParser, async (req, res) => {
             else res.send("user doesn't exist");
         });
 });
-
+//---------DELETE--------------------
+router.delete('/delete/record/:id', function (req, res) {
+    var item_id = req.params.id;
+    Record.findById(item_id)
+        .then((row) => {
+            row.destroy()
+                .then((data) => {
+                    res.json(data)
+                })
+                .error((err) => {
+                    res.send("error");
+                })
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
+});
+router.delete('/delete/category/:id', function (req, res) {
+    var item_id = req.params.id;
+    Category.findById(item_id)
+        .then((row) => {
+            row.destroy()
+                .then((data) => {
+                    res.json(data)
+                })
+                .error((err) => {
+                    res.send("error");
+                })
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
+});
 // ----------------Get-------------------
 
 // router.get('/getUsers', async (req, res) => {
