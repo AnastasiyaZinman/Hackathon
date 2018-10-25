@@ -3,8 +3,8 @@
   min-width:1000px;
   min-height:700px;
   text-align: center; 
-  background-image: radial-gradient(circle,#760A7A,#570363);
-  color:white;
+  /*background-image: radial-gradient(circle,#760A7A,#570363);
+  color:white;*/
 }
 
 .App-logo {
