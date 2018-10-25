@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './AddForm.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-class AddForm extends Component {
+class EditForm extends Component {
   constructor() {
     super()
     this.categoriesExpense = ["rent", "clothes", "food", "books"];
@@ -20,19 +20,18 @@ class AddForm extends Component {
   }
 
   inputChange = (e) => {
-    console.log(e.target.name)
     this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
     return (
       <div className="add-form">
-        <div className="close-button"><FontAwesomeIcon onClick={this.props.closeAddForm} icon="window-close" /></div>
-        <div>ADD NEW</div>
+        <div className="close-button"><FontAwesomeIcon onClick={this.props.closeEditForm} icon="window-close" /></div>
+        <div>EDIT</div>
         <div className="add-form-input">
-          <div className="one-column" onChange={this.inputChange}  name="type">
+          <div className="one-column" onChange={this.inputChange} name="type">
             <div> Expense <input type="radio" checked={this.state.type === "Expense"} onChange={this.inputChange} value="Expense" name="type" /> </div><span> </span>
-            <div> Income <input type="radio" checked={this.state.type === "Income"}  onChange={this.inputChange} value="Income" name="type" /> </div>
+            <div> Income <input type="radio" checked={this.state.type === "Income"} onChange={this.inputChange} value="Income" name="type" /> </div>
           </div>
           <div className="one-column" onChange={this.inputChange} name="method">
             <div> Cash <input type="radio" checked={this.state.method === "Cash"} onChange={this.inputChange} value="Cash" name="method" /> </div><span> </span>
@@ -55,14 +54,14 @@ class AddForm extends Component {
             )};
           </select></div>
           <div> Comment</div><div> <input type="text" name="comment" value={this.state.comment} onChange={this.inputChange} /> </div>
-          </div>
-          <div>
-            <button>Send</button>
-          </div>  
+        </div>
+        <div>
+          <button>Send</button>
+        </div>
       </div>
     )
   }
 }
 
-export default AddForm;
+export default EditForm;
 

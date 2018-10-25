@@ -2,113 +2,65 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import moment, { updateLocale } from 'moment';
 import axios from 'axios'
+import axiosFuncs from './axiosFuncs';
+
 import AddForm from './AddForm';
+import EditForm from './EditForm';
+import DeleteForm from './DeleteForm';
 import './Main.css';
 // import { DATA } from './init-data';
 import loader from '../img/money-loader.gif';
 // import loader from '../img/loading.gif';
 
-
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleLeft, faAngleRight, faCheck, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faCheck, faWindowClose, faPlus, faMinus, faMoneyBillAlt, faCreditCard, faTrashAlt, faShekelSign, faDollarSign, faEuroSign, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-library.add(faAngleLeft, faAngleRight, faCheck, faWindowClose);
+library.add(faAngleLeft, faAngleRight, faCheck, faWindowClose, faPlus, faMinus, faMoneyBillAlt, faCreditCard, faTrashAlt, faShekelSign, faDollarSign, faEuroSign, faEdit);
 
-const ITEMSPERPAGE = 15
+const ITEMSPERPAGE = 10
 
 class Main extends Component {
   constructor() {
     super()
     this.fields = ["Date", "Type", "Category", "Method", "Amount", "Currency", "Comments"]
+    this.currencyIcon = { "NIS": "shekel-sign", "EUR": "euro-sign", "USD": "dollar-sign" }
     this.state = {
       isLoading: true,
       allRecords: "",
       records: [],
       textTosearch: "",
-      searchType: "comment",
       startDate: "",
       endDate: "",
       currentPage: 1,
-      showAddForm: false
-      //recordToChange: -1 // id of the record to change in popup form or -1 if none
+      showAddForm: false,
+      recordIdToEdit: -1, // if -1 nothing to edit,
+      recordIdToDelete: -1 // if -1 nothing to delete
     }
   }
- 
+
   componentDidMount() {
     this.getDataFromDB();
   }
 
-  getDataFromDB() {
-    let userId=1;//this.props.id;
-    axios.get(`http://localhost:5001/getData/${userId}`)
-			.then(result => {
-				console.log(result.data[0].record);
-        this.setState({allRecords:result.data[0].record});
-        this.setState({isLoading: false})
-    })
-    .catch(function (error) {
-      alert("Sorry, something wrong. Can't get data from DB.");
-      console.log(error);
-    });
+  getCategories() {
+    axios.get(`http://localhost:5001/categories`)
+      .then(result => {
+        console.log(result);
+        // this.setState({allRecords:result.data[0].record});
+        // this.setState({isLoading: false})
+      })
   }
 
-  getRequests(link){
-    axios.get(`http://localhost:5001/${link}`)
-			.then(result => {
-				console.log(result);
-        // this.setState({allRecords:result.data[0].record});
-    })
-    .catch(function (error) {
-      // alert("Sorry, something wrong. New client haven't added.");
-      console.log(error);
-    });
-    
+  getDataFromDB() {
+    let userId = 1;//this.props.id;
+    axios.get(`http://localhost:5001/getData/${userId}`)
+      .then(result => {
+        console.log(result.data[0].record);
+        this.setState({ allRecords: result.data[0].record });
+        this.setState({ isLoading: false })
+      })
   }
-  deleteRequests(link, id){
-    console.log(link,id);
-    axios.delete(`http://localhost:5001/delete/${link}/${id}`)
-    .then(result => {
-      console.log(result);
-      // this.setState({allRecords:result.data[0].record});
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-  }
-  putRequests(link, data){
-    axios.put(`http://localhost:5001/${link}`, data, {
-        headers: {
-            'Content-Type': 'application/json',
-        }}
-    )
-    .then(response => {
-      console.log("data from DB",response);
-      // this.addNewClientToState(response.data)
-    })
-    .catch(function (error) {
-      // alert("Sorry, something wrong. New client haven't added.");
-      console.log(error);
-    });
-    console.log("Added to DB")
-  }
-  postRequests(link,data){
-    // let data = {name:"business", type:0, Icon:"faGlobe"};
-    axios.post(`http://localhost:5001/${link}`, data, {
-        headers: {
-            'Content-Type': 'application/json',
-        }}
-    )
-    .then(response => {
-      console.log("data from DB",response);
-      // this.addNewClientToState(response.data)
-    })
-    .catch(function (error) {
-      alert("Sorry, something wrong. New client haven't added.");
-      console.log(error);
-    });
-    console.log("Added to DB")
-  }
-  
+
   changeInput = (event) => this.setState({
     [event.target.name]: event.target.value
   })
@@ -119,62 +71,14 @@ class Main extends Component {
     this.setState({ currentPage })
   }
 
-  add = () => {
-    this.setState({ showAddForm: true })
-  }  
-  _show() {
-    // Don't forget that loading can be any data type you want!
-    if (this.state.isLoading) {
-      return (
-        <div className="loading">
-          <img src={loader} />
-        </div>
-      );
-    } 
-  }
-  addCategory =() => {
-    this.postRequests("category",{name:"business", type:0, Icon:"faGlobe"});
-  }
-  addRecord = () => {
-    this.postRequests("record",{
-      userId: this.state.allRecords[0].userId, 
-      date: "2018-08-30",             
-      type: 1,
-      categoryId: 1,
-      paymentMethod: 0,
-      amount: 100,
-      currency: 'USD',
-      comment: "nice"
-    });
-  }
-  getCategories = () => {
-    this.getRequests("categories");
-  }
-  deleteRecord = () =>{
-    let id=10;
-   this.deleteRequests("record", id);
-  }
-  deleteCategory= () =>{
-    let id=8;
-   this.deleteRequests("category", id);
-  }
-  updateCategories = () => {
-    this.putRequests("category",{id: 13, name:"sport", type:0, Icon:"faSport"});
-  }
-  updateRecord = () => {
-    this.putRequests("record",
-    {
-    id: 7, 
-    userId: this.state.allRecords[0].userId, 
-    date: "2018-08-30",             
-    type: 1,
-    categoryId: 3,
-    paymentMethod: 0,
-    amount: 50,
-    currency: 'USD',
-    comment: "nice"
-    });
-  }
+  /******Show Components *****/
+  showLoader = () => this.state.isLoading ? <div className="loading"> <img src={loader} /></div> : null
+
+  showNavBar = () =>
+    <ul id="nav-bar">
+      <li><Link to="/"><span>Records</span></Link></li>
+      <li><Link to="/statistics"><span>Statistics</span></Link></li>
+    </ul>
 
   showHeader = () => <div id="grid-header">
     {this.fields.map((f, i) => <div key={i}>{f}</div>)}
@@ -184,9 +88,9 @@ class Main extends Component {
     From: <input type="date" name="startDate" value={this.state.startDate} onChange={this.changeInput}></input><span> </span>
     To: <input type="date" name="endDate" value={this.state.endDate} onChange={this.changeInput}></input><span> </span>
     <input type="text" placeholder="Search" name="textTosearch" value={this.state.textTosearch} onChange={this.changeInput}></input>
+    <FontAwesomeIcon onClick={() => this.showAddForm()} icon="plus" />
   </div>
 
-  // Pagination and search bar
   showPagination = (startIndex, endIndex, lastPage) =>
     <div className="pagination">
       {this.state.currentPage !== 1 ? <FontAwesomeIcon onClick={(e) => this.changePage("minus")} icon="angle-left" size="1x" /> : null}
@@ -194,20 +98,22 @@ class Main extends Component {
       {this.state.currentPage !== lastPage ? <FontAwesomeIcon onClick={() => this.changePage("plus")} icon="angle-right" size="1x" /> : null}
     </div>
 
-  showNavBar = () =>
-    <ul id="nav-bar">
-      <li><Link to="/"><span>Records</span></Link></li>
-      <li><Link to="/statistics"><span>Statistics</span></Link></li>
-      <li onClick={() => this.add()}><span>Add new</span></li>
-    </ul>
+  showAddForm = () => {
+    axiosFuncs.deleteRecord();
+    this.setState({ showAddForm: true })
+  }
 
+  closeAddForm = () => this.setState({ showAddForm: false })
+  closeEditForm = () => this.setState({ recordIdToEdit: -1 })
+  closeDeleteForm = () => this.setState({ recordIdToDelete: -1 })
+
+  /***** Get Record Components */
   getCurrentRecords = () => {
-    let searchType = this.state.searchType.toLowerCase()
     let records = [...this.state.allRecords]
     let startIndex = (this.state.currentPage - 1) * ITEMSPERPAGE
     let endIndex = startIndex + ITEMSPERPAGE - 1
     records = records.filter(c =>
-      (c[searchType].toLowerCase().includes(this.state.textTosearch.toLowerCase()))
+      (c["comment"].toLowerCase().includes(this.state.textTosearch.toLowerCase()))
       && (c.date >= this.state.startDate || this.state.startDate === "")
       && (c.date <= this.state.endDate || this.state.endDate === "")
     )
@@ -222,43 +128,51 @@ class Main extends Component {
       {records.map(c => {
         let date = moment(c.date).format("MM/DD/YY")
         return (
-          <div className="item" key={c.id} onClick={() => this.editName(c.id)}>
+          <div className="item" key={c.id}>
             <div>{date}</div>
-            <div>{(c.type)?"expense":"income"}</div>
+            <div>{(c.type) ? <FontAwesomeIcon icon="minus" /> : <FontAwesomeIcon icon="plus" />}</div>
             <div>{c.category.name}</div>
-            <div>{c.paymentMethod.name}</div>
+            <div>{c.paymentMethod.name === "cash" ? <FontAwesomeIcon icon="money-bill-alt" /> : <FontAwesomeIcon icon="credit-card" />} </div>
             <div>{c.amount}</div>
-            <div>{c.currency}</div>
+            <div><FontAwesomeIcon icon={this.currencyIcon[c.currency]} /></div>
             <div>{c.comment}</div>
+            <div>
+              <FontAwesomeIcon icon="trash-alt" onClick={() => this.deleteRecord(c.id)} /> 
+              <span> </span> 
+              <FontAwesomeIcon icon="edit" onClick={() => this.editRecord(c.id)} /> 
+            </div>
           </div>)
       })}
     </div>
 
-    
+  editRecord = (id) => {
+    this.setState({recordIdToEdit: id})
+  }
+
+  deleteRecord = (id) => {
+    this.setState({recordIdToDelete: id})
+  }
+
   render() {
     let { records, startIndex, endIndex, lastPage } = this.getCurrentRecords()
-    // console.log(records)
     return (
-      <div className="App">
-        {this.showNavBar()}
-        <div className="container">
-          <div className="row-bar">
-            {this.showSearchBar()}
-            {this.showPagination(startIndex, endIndex, lastPage)}
+      <div>
+        <div className="App">
+          {this.showNavBar()}
+          <div className="container">
+            <div className="row-bar">
+              {this.showSearchBar()}
+              {this.showPagination(startIndex, endIndex, lastPage)}
+            </div>
+            {this.renderRecords(records)}
+            {this.state.showAddForm ? <AddForm closeAddForm={this.closeAddForm} /> : null}
+            {(this.state.recordIdToEdit !== -1) ? <EditForm closeEditForm={this.closeEditForm} /> : null}
+            {(this.state.recordIdToDelete !== -1) ? <DeleteForm closeEditForm={this.closeDeleteForm} /> : null}
+            {this.showLoader()}
           </div>
-         
-          {this.renderRecords(records)}
-          {this.state.showAddForm ? <AddForm /> : null} 
-          {this._show()}
+          <button type="button" onClick={this.getCategories}>getData</button>
         </div>
-        <button type="button" onClick={this.deleteCategory}>deleteCategory</button>
-        
-        {/* <button type="button" onClick={this.deleteRecord}>deleteRecord</button> */}
-        <button type="button" onClick={this.updateRecord}>updateRecord</button>
-        {/* <button type="button" onClick={this.addRecord}>addRecord</button> */}
-        {/* <button type="button" onClick={this.updateCategories}>updateCategory</button> */}
-        {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
-        {/* <button type="button" onClick={this.addCategory}>addCategory</button> */}
+        <div className="dot"> <FontAwesomeIcon size='6x' onClick={() => this.showAddForm()} icon="plus" /></div>
       </div>
     )
   }
