@@ -1,3 +1,7 @@
+* {
+    background-image: radial-gradient(circle,#760A7A,#570363);
+color:white;
+}
 .App {
   text-align: center;
 }
