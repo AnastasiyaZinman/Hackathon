@@ -38,15 +38,61 @@ class Main extends Component {
     this.getDataFromDB();
   }
 
-  getCategories(){
-    axios.get(`http://localhost:5001/categories`)
+  getDataFromDB() {
+    let userId=1;//this.props.id;
+    axios.get(`http://localhost:5001/getData/${userId}`)
+			.then(result => {
+				console.log(result.data[0].record);
+        this.setState({allRecords:result.data[0].record});
+        this.setState({isLoading: false})
+    })
+    .catch(function (error) {
+      alert("Sorry, something wrong. Can't get data from DB.");
+      console.log(error);
+    });
+  }
+
+  getRequests(link){
+    axios.get(`http://localhost:5001/${link}`)
 			.then(result => {
 				console.log(result);
         // this.setState({allRecords:result.data[0].record});
-        // this.setState({isLoading: false})
 		})
   }
-
+  putRequests(link, data){
+    axios.put(`http://localhost:5001/${link}`, data, {
+        headers: {
+            'Content-Type': 'application/json',
+        }}
+    )
+    .then(response => {
+      console.log("data from DB",response);
+      // this.addNewClientToState(response.data)
+    })
+    .catch(function (error) {
+      // alert("Sorry, something wrong. New client haven't added.");
+      console.log(error);
+    });
+    console.log("Added to DB")
+  }
+  postRequests(data, link){
+    // let data = {name:"business", type:0, Icon:"faGlobe"};
+    axios.post(`http://localhost:5001/${link}`, data, {
+        headers: {
+            'Content-Type': 'application/json',
+        }}
+    )
+    .then(response => {
+      console.log("data from DB",response);
+      // this.addNewClientToState(response.data)
+    })
+    .catch(function (error) {
+      alert("Sorry, something wrong. New client haven't added.");
+      console.log(error);
+    });
+    console.log("Added to DB")
+  }
+  
   changeInput = (event) => this.setState({
     [event.target.name]: event.target.value
   })
@@ -62,15 +108,7 @@ class Main extends Component {
   }
 
   
-  getDataFromDB() {
-    let userId=1;//this.props.id;
-    axios.get(`http://localhost:5001/getData/${userId}`)
-			.then(result => {
-				console.log(result.data[0].record);
-        this.setState({allRecords:result.data[0].record});
-        this.setState({isLoading: false})
-		})
-	}
+  
   _show() {
     // Don't forget that loading can be any data type you want!
     if (this.state.isLoading) {
@@ -82,6 +120,12 @@ class Main extends Component {
     } 
   }
   
+  getCategories = () => {
+    this.getRequests("categories");
+  }
+  updateCategories = () => {
+    this.putRequests("category",{id: 13, name:"sport", type:0, Icon:"faSport"});
+  }
 
   showHeader = () => <div id="grid-header">
     {this.fields.map((f, i) => <div key={i}>{f}</div>)}
@@ -158,7 +202,10 @@ class Main extends Component {
           {this.state.showAddForm ? <AddForm /> : null} 
           {this._show()}
         </div>
-        <button type="button" onClick={this.getCategories}>getData</button>
+        categories
+        <button type="button" onClick={this.updateCategories}>updateCategory</button>
+        {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
+        {/* <button type="button" onClick={this.postRequests({name:"business", type:0, Icon:"faGlobe"},"category")}>addCategory</button> */}
       </div>
     )
   }

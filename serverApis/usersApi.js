@@ -37,8 +37,42 @@ router.post('/addUser', jsonParser, async (req, res) => {
                 res.send("already exist");
             }
         })
-
 })
+
+router.post('/category', jsonParser, async (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    console.log("new category", req.body);
+    Category.create({
+            name: req.body.name,
+            type: req.body.type,
+            Icon: req.body.Icon
+            })
+             .then((data)=>{
+                res.json(data)
+            })
+            .error((err) => {
+                res.status(500).send(err);
+            })      
+});
+
+router.put('/category', jsonParser, async (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    // console.log("update", req.body);
+   Category.findOne({ where: { id: req.body.id } })
+            .then((row)=>{
+                // console.log("row",row);
+            row.update(req.body)
+            .then((data)=>{
+                res.json(data)
+            })
+            .error((err) => {
+                res.send("error");
+            })     
+           })
+            .error((err) => {
+                res.status(500).send(err);
+            })      
+});
 //----------------LogIn----------------
 router.post('/logIn', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
