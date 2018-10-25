@@ -122,7 +122,18 @@ class Main extends Component {
   addCategory =() => {
     this.postRequests({name:"business", type:0, Icon:"faGlobe"},"category");
   }
-  
+  addRecord = () => {
+    this.postRequests({
+      userId: this.state.allRecords[0].userId,
+      date: "2018-08-30",
+      type: 1,
+      categoryId: 1,
+      paymentMethod: 0,
+      amount: 100,
+      currency: 'USD',
+      comment: "nice"
+    },"record");
+  }
   getCategories = () => {
     this.getRequests("categories");
   }
@@ -205,11 +216,10 @@ class Main extends Component {
           {this.state.showAddForm ? <AddForm /> : null} 
           {this._show()}
         </div>
-        categories
-      
-        <button type="button" onClick={this.updateCategories}>updateCategory</button>
+        <button type="button" onClick={this.addRecord}>addRecord</button>
+        {/* <button type="button" onClick={this.updateCategories}>updateCategory</button> */}
         {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
-        <button type="button" onClick={this.addCategory}>addCategory</button>
+        {/* <button type="button" onClick={this.addCategory}>addCategory</button> */}
       </div>
     )
   }

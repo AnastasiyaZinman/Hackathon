@@ -48,7 +48,18 @@ router.post('/category', jsonParser, async (req, res) => {
             })
             .error((err) => {
                 res.status(500).send(err);
-            })      
+        })      
+});
+router.post('/record', jsonParser, async (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    console.log("new record", req.body);
+    Record.create(req.body)
+             .then((data)=>{
+                res.json(data)
+            })
+            .error((err) => {
+                res.status(500).send(err);
+        })      
 });
 
 router.put('/category', jsonParser, async (req, res) => {
