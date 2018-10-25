@@ -42,11 +42,7 @@ router.post('/addUser', jsonParser, async (req, res) => {
 router.post('/category', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     console.log("new category", req.body);
-    Category.create({
-            name: req.body.name,
-            type: req.body.type,
-            Icon: req.body.Icon
-            })
+    Category.create(req.body)
              .then((data)=>{
                 res.json(data)
             })

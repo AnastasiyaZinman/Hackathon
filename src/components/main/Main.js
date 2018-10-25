@@ -119,6 +119,9 @@ class Main extends Component {
       );
     } 
   }
+  addCategory =() => {
+    this.postRequests({name:"business", type:0, Icon:"faGlobe"},"category");
+  }
   
   getCategories = () => {
     this.getRequests("categories");
@@ -203,9 +206,10 @@ class Main extends Component {
           {this._show()}
         </div>
         categories
+      
         <button type="button" onClick={this.updateCategories}>updateCategory</button>
         {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
-        {/* <button type="button" onClick={this.postRequests({name:"business", type:0, Icon:"faGlobe"},"category")}>addCategory</button> */}
+        <button type="button" onClick={this.addCategory}>addCategory</button>
       </div>
     )
   }
