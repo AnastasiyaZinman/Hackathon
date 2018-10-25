@@ -80,6 +80,23 @@ router.put('/category', jsonParser, async (req, res) => {
                 res.status(500).send(err);
             })      
 });
+router.put('/record', jsonParser, async (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    // console.log("update", req.body);
+   Record.findOne({ where: { id: req.body.id } })
+            .then((row)=>{
+            row.update(req.body)
+            .then((data)=>{
+                res.json(data)
+            })
+            .error((err) => {
+                res.send("error");
+            })     
+           })
+            .error((err) => {
+                res.status(500).send(err);
+            })      
+});
 //----------------LogIn----------------
 router.post('/logIn', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);

@@ -75,7 +75,7 @@ class Main extends Component {
     });
     console.log("Added to DB")
   }
-  postRequests(data, link){
+  postRequests(link,data){
     // let data = {name:"business", type:0, Icon:"faGlobe"};
     axios.post(`http://localhost:5001/${link}`, data, {
         headers: {
@@ -120,25 +120,39 @@ class Main extends Component {
     } 
   }
   addCategory =() => {
-    this.postRequests({name:"business", type:0, Icon:"faGlobe"},"category");
+    this.postRequests("category",{name:"business", type:0, Icon:"faGlobe"});
   }
   addRecord = () => {
-    this.postRequests({
-      userId: this.state.allRecords[0].userId,
-      date: "2018-08-30",
+    this.postRequests("record",{
+      userId: this.state.allRecords[0].userId, 
+      date: "2018-08-30",             
       type: 1,
       categoryId: 1,
       paymentMethod: 0,
       amount: 100,
       currency: 'USD',
       comment: "nice"
-    },"record");
+    });
   }
   getCategories = () => {
     this.getRequests("categories");
   }
   updateCategories = () => {
     this.putRequests("category",{id: 13, name:"sport", type:0, Icon:"faSport"});
+  }
+  updateRecord = () => {
+    this.putRequests("record",
+    {
+    id: 7, 
+    userId: this.state.allRecords[0].userId, 
+    date: "2018-08-30",             
+    type: 1,
+    categoryId: 3,
+    paymentMethod: 0,
+    amount: 50,
+    currency: 'USD',
+    comment: "nice"
+    });
   }
 
   showHeader = () => <div id="grid-header">
@@ -216,7 +230,9 @@ class Main extends Component {
           {this.state.showAddForm ? <AddForm /> : null} 
           {this._show()}
         </div>
-        <button type="button" onClick={this.addRecord}>addRecord</button>
+        <button type="button" onClick={this.updateRecord}>updateRecord</button>
+
+        {/* <button type="button" onClick={this.addRecord}>addRecord</button> */}
         {/* <button type="button" onClick={this.updateCategories}>updateCategory</button> */}
         {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
         {/* <button type="button" onClick={this.addCategory}>addCategory</button> */}
