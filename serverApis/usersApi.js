@@ -56,13 +56,13 @@ router.post('/logIn', jsonParser, async (req, res) => {
                 console.log("user.data.password", user.dataValues.password);
                 bcrypt.compare(req.body.password, user.dataValues.password, function (err, isPasswordMatch) {
                     console.log(isPasswordMatch);
-                    if(isPasswordMatch) {
+                    if (isPasswordMatch) {
                         res.json(user)
-                       } else {
-                           res.send(false);
+                    } else {
+                        res.send(false);
                         // Passwords don't match
                         console.log(err);
-                       } 
+                    }
                 })
             }
             else res.send("user doesn't exist");
@@ -82,49 +82,41 @@ router.get('/getData/:id', async (req, res) => {
     User.findAll({
         attributes: ['id', 'name'],
         include: [{
-          model: Record,
-          as: "record",
-          include: [{
-            attributes: ['name','Icon'],
-            model: Category,
-            as: "category"
-          },{
-            attributes: ['name'],
-            model: PaymentMethod,
-            as: "paymentMethod"
-          }]
+            model: Record,
+            as: "record",
+            include: [{
+                attributes: ['name', 'Icon'],
+                model: Category,
+                as: "category"
+            }, {
+                attributes: ['name'],
+                model: PaymentMethod,
+                as: "paymentMethod"
+            }]
         }],
         where: { id: userId }
-      }).then(user => {
+    }).then(user => {
         res.send(user)
-     
-      }).error((err) => {
+
+    }).error((err) => {
         console.error(err);
         res.status(500).send(err)
-      })
-     })
-    //  User.findAll({
-    //     attributes: ['id', 'name'],
-    //     include: [{
-    //       model: Record,
-    //       as: "record",
-    //     }],
-    //     where: { id: userId }
-    //   }).then(user => {
-    //     res.send(user)
-     
-    //   }).error((err) => {
-    //     console.error(err);
-    //     res.status(500).send(err)
-    //   })
-    //  })
+    })
+})
 
-// const addRelationship = async function () {
-//     let person = await Person.create({ name: "Target" })
-//     let parent = await Parent.create({ name: "Julius" })
-//     parson.addCustomer(customer)
-//     //alternatively, could also do customer.addStore(store)
-// }
-// addRelationship()
+router.get('/categories', async (req, res) => {
+    Category.findAll({
+    })
+        .then(category => {
+            res.send(category)
+            console.log("categories", category);
+        })
+        .error((err) => {
+            console.error(err);
+            res.status(500).send(err)
+        })
+})
+
+
 
 module.exports = router;

@@ -38,6 +38,15 @@ class Main extends Component {
     this.getDataFromDB();
   }
 
+  getCategories(){
+    axios.get(`http://localhost:5001/categories`)
+			.then(result => {
+				console.log(result);
+        // this.setState({allRecords:result.data[0].record});
+        // this.setState({isLoading: false})
+		})
+  }
+
   changeInput = (event) => this.setState({
     [event.target.name]: event.target.value
   })
@@ -52,22 +61,7 @@ class Main extends Component {
     this.setState({ showAddForm: true })
   }
 
-  /*
-  editName = (id) => {
-    let showUpdatePopup = !this.state.showUpdatePopup
-    this.setState({ showUpdatePopup, recordToChange: id })
-  }
-
-  updateRecords = (state, id) => {
-    let records = this.state.allRecords
-    let index = records.findIndex(c => c._id === id)
-    records[index].name = state.name + " " + state.surname
-    records[index].country = state.country
-    this.setState({ allRecords: records, showUpdatePopup: false })
-  }
-
-  closeUpdatePopup = () => this.setState({ showUpdatePopup: false })
-  */
+  
   getDataFromDB() {
     let userId=1;//this.props.id;
     axios.get(`http://localhost:5001/getData/${userId}`)
@@ -164,7 +158,7 @@ class Main extends Component {
           {this.state.showAddForm ? <AddForm /> : null} 
           {this._show()}
         </div>
-        {/* <button type="button" onClick={this.getDataFromDB}>getData</button> */}
+        <button type="button" onClick={this.getCategories}>getData</button>
       </div>
     )
   }
