@@ -15,8 +15,8 @@ router.post('/addUser', jsonParser, async (req, res) => {
     console.log("username", req.body.username);
     User.findOne({ where: { name: req.body.username } })
         .then(user => {
-            // console.log("user", user);
-            if (!user) {
+            console.log("user", user);
+            if (user===null) {
                 bcrypt.hash(req.body.password, 10, function (err, hash) {
                     if (err) { throw (err); }
                     console.log("here", hash);
@@ -27,14 +27,14 @@ router.post('/addUser', jsonParser, async (req, res) => {
                         .then((data) => {
                             res.json(data)
                         })
-                        .error((err) => {
-                            res.status(500).send(err);
-                        })
+                        // .error((err) => {
+                        //     res.status(500).send(err);
+                        // })
                 });
             }
             else {
                 console.log("already exist")
-                res.send("already exist");
+                res.json({error:"already exists"});
             }
         })
 })
@@ -174,6 +174,9 @@ router.get('/getData/:id', async (req, res) => {
         include: [{
             model: Record,
             as: "record",
+            // order: [
+            //     [User.Category, 'category', 'asc']
+            //   ],
             include: [{
                 attributes: ['name', 'Icon'],
                 model: Category,
@@ -185,6 +188,7 @@ router.get('/getData/:id', async (req, res) => {
             }]
         }],
         where: { id: userId }
+       
     }).then(user => {
         res.send(user)
 

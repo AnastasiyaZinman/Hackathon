@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios'
-
+import { observer, inject } from 'mobx-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import ReactTimeout from 'react-timeout'
+import { faGlobe, faUsdCircle} from '@fortawesome/free-solid-svg-icons'
+import './home.css';
+@inject("store")
+@observer 
 class LoginForm extends Component {
     constructor() {
         super()
@@ -11,6 +17,9 @@ class LoginForm extends Component {
             password:''
         }
     }
+    _showErrorMessage = () => {
+        this.props.setTimeout(this.props.store.toggle, 5000) // call the `toggle` function after 5000ms
+      }
 
     handleChange = (event) => {
         this.setState({
@@ -21,35 +30,42 @@ class LoginForm extends Component {
         this.setState({username:'',password:''})
     }
 
-    handleSubmit = (event) => {
+    logIn = () => {
         //Send data to server via ajax
-        event.preventDefault()
+        // event.preventDefault()
+        if (this.state.username && this.state.password){
         axios
             .post('http://localhost:5001/logIn', {
                 username: this.state.username,
                 password: this.state.password
             })
-            .then(response => {
+            .then(response => { 
+                console.log("login",response);
                 if (response.status === 200) {
-                  console.log("login",response);
+                 
                    if(response.data!==false){
-                    this.props.updateUser(
-                        {
-                        loggedIn: true,
-                        id: response.data.id,
-                        username: response.data.name
-                    })
+                        this.props.store.loggedIn = true;
+                        this.props.store.id = response.data.id;
+                        this.props.store.username = response.data.name;
                     this.setState({
                         redirectTo: '/main'
                     })
                 }
                 else{
-                    alert("wrong login or password");
-                    console.log("wrong login or password");
+                    // alert("wrong login or password");
+                    this.props.store.errorMessage="wrong login or password";
+                    this.props.store.showErrorMessage = true; 
+                    this._showErrorMessage();
                     this.clear()
                 }
                 }
             })
+        }
+        else {
+            this.props.store.errorMessage="Type name and password";
+            this.props.store.showErrorMessage=true;
+            this._showErrorMessage();
+        }
             // .catch(error => {
             //     console.log('login error: ')
             //     console.log(error);
@@ -62,23 +78,36 @@ class LoginForm extends Component {
             return <Redirect to={{ pathname: this.state.redirectTo }} />
         } else {
             return (
-                <div>
-                    <h4>Login</h4>
-                    <form onSubmit={this.handleSubmit}>
-                        <label>
-                            Name:
-                            <input type="text"  id="usernameLogIn" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
-                        </label>
-                        <label>
-                            password:
-                            <input type="password" id="passwordLogIn" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
-                        </label>
-                        <input type="submit" value="Submit" />
-                    </form>
-                </div>
-            )
-        }
-    }
+                <div className="reg-box">
+                {/* <form onSubmit={this.handleSubmit}> */}
+                {/* <div className="row">
+                    <div className="col-6">col</div>
+                    <div className="col-6">col</div>
+                </div> */}
+
+                <FontAwesomeIcon style={{ color: "white" }} className="fas" icon={faGlobe} size="6x" />
+               
+                <h3 className="text-center">Log In</h3>
+               <div className="row log">
+               <div className="col-4 "> Name:</div>
+               <div className="col-8">
+               <input type="text" className="inp-reg" id="usernameLogIn" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
+               </div></div>
+               <div className="row pas">
+               <div className="col-4 ">
+                Password:</div>
+                <div className="col-8">
+                <input type="password" className="inp-reg" id="passwordLogIn" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
+                </div> </div>
+                
+            <button className="button button-reg" onClick={this.logIn}><span>Log In</span></button>
+            {(this.props.store.showErrorMessage)?<div className="error-message">{this.props.store.errorMessage}</div>:null}
+          {/* <input type="submit" className="button button-reg" value="Log In" /> */}
+           {/* </form>    */}
+        </div>
+
+        )
+        }}
 }
 
-export default LoginForm
+export default ReactTimeout(LoginForm)

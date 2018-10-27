@@ -1,19 +1,22 @@
 
 .App {
-  min-width:1000px;
-  min-height:700px;
+  min-width: 1000px;
+  min-height: 700px;
   text-align: center; 
-  /*background-image: radial-gradient(circle,#760A7A,#570363);
-  color:white;*/
+  background-image: radial-gradient(circle,rgb(169, 88, 172),#570363);
+  /* #760A7A */
+  color:white;
 }
-
+a:visited {
+  color: white;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #b4b5b8;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
+import Charts from './charts';
+import Registration from './registration'
 
 class Home extends Component {
     constructor() {
         super()
-    } 
-    render() { 
+    }
+
+    render() {
         return (
-            <div>
-               Home
+            <div className="home-box">
+                <Registration />
+                {/* <Charts /> */}
             </div>
         )
 
     }
 }
 
-export default Home
+export default Home;
