@@ -8,15 +8,15 @@ import EditForm from './EditForm';
 import DeleteForm from './DeleteForm';
 import './Main.css';
 import { DATA } from './init-data';
+import { observer, inject } from 'mobx-react';
 import loader from '../img/money-loader.gif';
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleLeft, faAngleRight, faCheck, faWindowClose, faPlus, faMinus, faMoneyBillAlt, faCreditCard, faTrashAlt, faShekelSign, faDollarSign, faEuroSign, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 library.add(faAngleLeft, faAngleRight, faCheck, faWindowClose, faPlus, faMinus, faMoneyBillAlt, faCreditCard, faTrashAlt, faShekelSign, faDollarSign, faEuroSign, faEdit);
-
-const ITEMSPERPAGE = 10
-
+const ITEMSPERPAGE = 10;
+@inject("store")
+@observer 
 class Main extends Component {
   constructor() {
     super()
@@ -32,6 +32,7 @@ class Main extends Component {
       showAddForm: false,
       recordIdToEdit: -1, // if -1 nothing to edit,
       recordIdToDelete: -1 // if -1 nothing to delete,
+     
     }
   }
 
@@ -58,6 +59,12 @@ class Main extends Component {
     this.setState({ currentPage })
     this.getCurrentRecords();
   }
+  changeLimitation = () => {
+    // let userId = 1;
+    // newRecord.userId = 1;
+    let data={id:this.props.store.id, limitation: this.props.store.limitation};
+    AxiosFuncs.putRequests("limitation", data);
+  }
 
   /******Show Components *****/
   showLoader = () => this.state.isLoading ? <div className="loading"> <img src={loader} /></div> : null
@@ -66,6 +73,8 @@ class Main extends Component {
     <ul id="nav-bar">
       <li><Link to="/"><span>Records</span></Link></li>
       <li><Link to="/statistics"><span>Charts</span></Link></li>
+  
+      <button type="button" onClick={this.changeLimitation}>Add limit</button>
     </ul>
 
   showHeader = () => <div id="grid-header">

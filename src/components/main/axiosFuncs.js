@@ -1,6 +1,9 @@
 import axios from 'axios'
-
+import { observer, inject } from 'mobx-react';
+// @inject("store")
+// @observer 
 class AxiosFuncClass {
+  
   getRequests(link) {
     return axios.get(`/${link}`)
       .then(result => {
@@ -53,6 +56,7 @@ class AxiosFuncClass {
   //------ Functions to use externally
 
   getDataFromDB() {
+    console.log('aaa')
     let userId = 1;//this.props.id;
     return axios.get(`/getData/${userId}`)
   }
@@ -88,11 +92,9 @@ class AxiosFuncClass {
     newRecord.userId = 1;
     return this.putRequests("record",newRecord);
   }
-
 }
 
 const AxiosFuncs = new AxiosFuncClass();
-
 export default AxiosFuncs;
 
 

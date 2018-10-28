@@ -10,7 +10,8 @@ class DataStore {
 	@observable showErrorMessage = false;
 	@observable errorMessage = "";
 	@observable allRecords = [];
-	@observable dataExpense = []
+	@observable dataExpense = [];
+	@observable limitation = 2000;
 	// @observable  currentUserIdForAddChild= {};
 
 	@action getDataFromDB = () => {

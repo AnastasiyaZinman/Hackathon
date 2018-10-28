@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios'
-import { observer, inject } from 'mobx-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ReactTimeout from 'react-timeout'
 import { faGlobe, faUsdCircle} from '@fortawesome/free-solid-svg-icons'
 import './home.css';
+import { observer, inject } from 'mobx-react';
 @inject("store")
 @observer 
 class LoginForm extends Component {

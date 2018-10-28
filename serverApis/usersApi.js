@@ -80,6 +80,26 @@ router.put('/category', jsonParser, async (req, res) => {
             res.status(500).send(err);
         })
 });
+
+router.put('/limitation', jsonParser, async (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    console.log("limit", req.body.limitation);
+    console.log("id", req.body.id);
+    User.findOne({ where: { id: req.body.id } })
+        .then((row) => {
+            // console.log("row",row.limitation);
+            row.update({"limitation" : req.body.limitation})
+                .then((data) => {
+                    res.json(data)
+                })
+                .error((err) => {
+                    res.send("error");
+                })
+        })
+        .error((err) => {
+            res.status(500).send(err);
+        })
+});
 router.put('/record', jsonParser, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
     // console.log("update", req.body);

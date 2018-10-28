@@ -14,6 +14,9 @@ const User = sequelize.define('User', {
     password: {
         type: Sequelize.STRING,
         notNull: true
+    },
+    limitation: {
+        type: Sequelize.INTEGER
     }
 },
     {
@@ -99,6 +102,7 @@ const PaymentMethod = sequelize.define('PaymentMethod', {
     {
         timestamps: false
     });
+   
 User.hasMany(Record, { foreignKey: 'userId', sourceKey: 'id', as: "record" });
 Category.hasMany(Record, { foreignKey: 'categoryId', sourceKey: 'id' });
 // Record.hasOne(Category, { foreignKey: 'id', sourceKey: 'categoryId' })
