@@ -77,7 +77,7 @@ class Chart2 extends Component {
         }
       }
       let result = {
-        "name":day, "amount":dayAmount
+        "name":day.getDate(), "amount":dayAmount
       }
       resultArray.push(result);
     }
