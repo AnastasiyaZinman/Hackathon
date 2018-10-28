@@ -35,7 +35,7 @@ class LoginForm extends Component {
         // event.preventDefault()
         if (this.state.username && this.state.password){
         axios
-            .post('http://localhost:5001/logIn', {
+            .post('/logIn', {
                 username: this.state.username,
                 password: this.state.password
             })

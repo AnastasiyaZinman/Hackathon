@@ -67,9 +67,9 @@ class Chart2 extends Component {
         && clientTime.getMonth() === day.getMonth() 
         && clientTime.getDate() === day.getDate()) {
           // console.log("type",data[j].type);
-          // if (data[j].type===0){
+          if (data[j].type===0){
           dayAmount = dayAmount + data[j]["amount"];
-          // }
+          }
           // else {
           //   dayAmountIncome = dayAmountIncome + data[j]["amount"]; 
           // }

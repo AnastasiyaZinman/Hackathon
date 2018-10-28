@@ -16,7 +16,7 @@ class DataStore {
 	@action getDataFromDB = () => {
 		let userId = 1;//this.props.id;
 		console.log("GETDATAFROMDB");
-		axios.get(`http://localhost:5001/getData/${userId}`)
+		axios.get(`/getData/${userId}`)
 			.then(result => {
 				// console.log(result.data[0].record);
 				this.allRecords = result.data[0].record;

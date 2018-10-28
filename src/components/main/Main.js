@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import moment, { updateLocale } from 'moment';
-import axios from 'axios'
-import axiosFuncs from './axiosFuncs';
+import AxiosFuncs from './AxiosFuncs';
 
 import AddForm from './AddForm';
 import EditForm from './EditForm';
 import DeleteForm from './DeleteForm';
 import './Main.css';
-// import { DATA } from './init-data';
+import { DATA } from './init-data';
 import loader from '../img/money-loader.gif';
-// import loader from '../img/loading.gif';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleLeft, faAngleRight, faCheck, faWindowClose, faPlus, faMinus, faMoneyBillAlt, faCreditCard, faTrashAlt, faShekelSign, faDollarSign, faEuroSign, faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -27,38 +25,27 @@ class Main extends Component {
     this.state = {
       isLoading: true,
       allRecords: "",
-      records: [],
       textTosearch: "",
       startDate: "",
       endDate: "",
       currentPage: 1,
       showAddForm: false,
       recordIdToEdit: -1, // if -1 nothing to edit,
-      recordIdToDelete: -1 // if -1 nothing to delete
+      recordIdToDelete: -1 // if -1 nothing to delete,
     }
   }
 
   componentDidMount() {
-    this.getDataFromDB();
+    this.getRecords();
   }
 
-  getCategories() {
-    axios.get(`http://localhost:5001/categories`)
-      .then(result => {
-        console.log(result);
-        // this.setState({allRecords:result.data[0].record});
-        // this.setState({isLoading: false})
-      })
-  }
-
-  getDataFromDB() {
-    let userId = 1;//this.props.id;
-    axios.get(`http://localhost:5001/getData/${userId}`)
-      .then(result => {
-        console.log(result.data[0].record);
-        this.setState({ allRecords: result.data[0].record });
-        this.setState({ isLoading: false })
-      })
+  getRecords =() => {
+    AxiosFuncs.getDataFromDB().then(result => {
+      this.setState({ allRecords: result.data[0].record });
+      this.setState({ isLoading: false })
+    }).catch(function (error) {
+      console.log(error);
+    })
   }
 
   changeInput = (event) => this.setState({
@@ -69,6 +56,7 @@ class Main extends Component {
     let currentPage = this.state.currentPage
     action === "plus" ? currentPage++ : currentPage--
     this.setState({ currentPage })
+    this.getCurrentRecords();
   }
 
   /******Show Components *****/
@@ -76,8 +64,8 @@ class Main extends Component {
 
   showNavBar = () =>
     <ul id="nav-bar">
-      <li><Link to="/main"><span>Records</span></Link></li>
-      <li><Link to="/statistics"><span>Statistics</span></Link></li>
+      <li><Link to="/"><span>Records</span></Link></li>
+      <li><Link to="/statistics"><span>Charts</span></Link></li>
     </ul>
 
   showHeader = () => <div id="grid-header">
@@ -88,7 +76,6 @@ class Main extends Component {
     From: <input type="date" name="startDate" value={this.state.startDate} onChange={this.changeInput}></input><span> </span>
     To: <input type="date" name="endDate" value={this.state.endDate} onChange={this.changeInput}></input><span> </span>
     <input type="text" placeholder="Search" name="textTosearch" value={this.state.textTosearch} onChange={this.changeInput}></input>
-    <FontAwesomeIcon onClick={() => this.showAddForm()} icon="plus" />
   </div>
 
   showPagination = (startIndex, endIndex, lastPage) =>
@@ -99,7 +86,6 @@ class Main extends Component {
     </div>
 
   showAddForm = () => {
-    axiosFuncs.deleteRecord();
     this.setState({ showAddForm: true })
   }
 
@@ -130,31 +116,32 @@ class Main extends Component {
         return (
           <div className="item" key={c.id}>
             <div>{date}</div>
-            <div>{(c.type) ? <FontAwesomeIcon icon="minus" /> : <FontAwesomeIcon icon="plus" />}</div>
+            <div>{ c.type ? <FontAwesomeIcon icon="plus" /> : <FontAwesomeIcon icon="minus" />}</div>
             <div>{c.category.name}</div>
             <div>{c.paymentMethod.name === "cash" ? <FontAwesomeIcon icon="money-bill-alt" /> : <FontAwesomeIcon icon="credit-card" />} </div>
             <div>{c.amount}</div>
             <div><FontAwesomeIcon icon={this.currencyIcon[c.currency]} /></div>
             <div>{c.comment}</div>
             <div>
-              <FontAwesomeIcon icon="trash-alt" onClick={() => this.deleteRecord(c.id)} /> 
-              <span> </span> 
-              <FontAwesomeIcon icon="edit" onClick={() => this.editRecord(c.id)} /> 
+              <FontAwesomeIcon icon="trash-alt" onClick={() => this.deleteRecord(c.id)} />
+              <span> </span>
+              <FontAwesomeIcon icon="edit" onClick={() => this.editRecord(c.id)} />
             </div>
           </div>)
       })}
     </div>
 
   editRecord = (id) => {
-    this.setState({recordIdToEdit: id})
+    this.setState({ recordIdToEdit: id })
   }
 
   deleteRecord = (id) => {
-    this.setState({recordIdToDelete: id})
+    this.setState({ recordIdToDelete: id })
   }
 
   render() {
     let { records, startIndex, endIndex, lastPage } = this.getCurrentRecords()
+
     return (
       <div>
         <div className="App">
@@ -165,12 +152,11 @@ class Main extends Component {
               {this.showPagination(startIndex, endIndex, lastPage)}
             </div>
             {this.renderRecords(records)}
-            {this.state.showAddForm ? <AddForm closeAddForm={this.closeAddForm} /> : null}
-            {(this.state.recordIdToEdit !== -1) ? <EditForm closeEditForm={this.closeEditForm} /> : null}
-            {(this.state.recordIdToDelete !== -1) ? <DeleteForm closeEditForm={this.closeDeleteForm} /> : null}
+            {this.state.showAddForm ? <AddForm closeAddForm={this.closeAddForm} getRecords={this.getRecords}/> : null}
+            {(this.state.recordIdToEdit !== -1) ? <EditForm closeEditForm={this.closeEditForm} recordIdToEdit={this.state.recordIdToEdit} records = {records} getRecords={this.getRecords}/> : null}
+            {(this.state.recordIdToDelete !== -1) ? <DeleteForm closeDeleteForm={this.closeDeleteForm} recordIdToDelete={this.state.recordIdToDelete} getRecords={this.getRecords}/> : null}
             {this.showLoader()}
           </div>
-          <button type="button" onClick={this.getCategories}>getData</button>
         </div>
         <div className="dot"> <FontAwesomeIcon size='6x' onClick={() => this.showAddForm()} icon="plus" /></div>
       </div>

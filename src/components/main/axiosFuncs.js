@@ -1,125 +1,98 @@
 import axios from 'axios'
 
-class AxiosFunc {
-    getRequests(link) {
-        axios.get(`http://localhost:5001/${link}`)
-            .then(result => {
-                console.log(result);
-                // this.setState({allRecords:result.data[0].record});
-            })
-            .catch(function (error) {
-                // alert("Sorry, something wrong. New client haven't added.");
-                console.log(error);
-            });
+class AxiosFuncClass {
+  getRequests(link) {
+    return axios.get(`/${link}`)
+      .then(result => {
+        console.log(result);
+      })
+      .catch(function (error) {
+        console.log("Sorry, something wrong. Get request failed", error);
+      });
 
-    }
+  }
 
-    deleteRequests(link, id) { 
-        link = "record";
-        id = 15;
-        console.log(link, id);
-        axios.delete(`http://localhost:5001/delete/${link}/${id}`)
-            .then(result => {
-                console.log(result);
-                // this.setState({allRecords:result.data[0].record});
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-    putRequests(link, data) {
-        axios.put(`http://localhost:5001/${link}`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }
-        )
-            .then(response => {
-                console.log("data from DB", response);
-                // this.addNewClientToState(response.data)
-            })
-            .catch(function (error) {
-                // alert("Sorry, something wrong. New client haven't added.");
-                console.log(error);
-            });
-        console.log("Added to DB")
-    }
-    postRequests(link, data) {
-        // let data = {name:"business", type:0, Icon:"faGlobe"};
-        axios.post(`http://localhost:5001/${link}`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }
-        )
-            .then(response => {
-                console.log("data from DB", response);
-                // this.addNewClientToState(response.data)
-            })
-            .catch(function (error) {
-                alert("Sorry, something wrong. New client haven't added.");
-                console.log(error);
-            });
-        console.log("Added to DB")
-    }
+  deleteRequests(link, id) {
+    //link = "record";
+    //id = 15;
+    console.log(link, id);
+    return axios.delete(`/delete/${link}/${id}`)
+      .then(result => {
+        console.log("success", result);
+      })
+      .catch(function (error) {
+        console.log("Sorry, something wrong. delete request failed", error);
+      });
+  }
 
-    addCategory = () => {
-        this.postRequests("category", { name: "business", type: 0, Icon: "faGlobe" });
-    }
-    addRecord = () => {
-        this.postRequests("record", {
-            userId: this.state.allRecords[0].userId,
-            date: "2018-08-30",
-            type: 1,
-            categoryId: 1,
-            paymentMethod: 0,
-            amount: 100,
-            currency: 'USD',
-            comment: "nice"
-        });
-    }
-    getCategories = () => {
-        this.getRequests("categories");
-    }
-    deleteRecord = () => {
-        let id = 10;
-        this.deleteRequests("record", id);
-    }
-    deleteCategory = () => {
-        let id = 8;
-        this.deleteRequests("category", id);
-    }
-    updateCategories = () => {
-        this.putRequests("category", { id: 13, name: "sport", type: 0, Icon: "faSport" });
-    }
-    updateRecord = () => {
-        this.putRequests("record",
-            {
-                id: 7,
-                userId: this.state.allRecords[0].userId,
-                date: "2018-08-30",
-                type: 1,
-                categoryId: 3,
-                paymentMethod: 0,
-                amount: 50,
-                currency: 'USD',
-                comment: "nice"
-            });
-    }
+  putRequests(link, data) {
+    return axios.put(`/${link}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(response => {
+      console.log("DB Updated", response);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  postRequests(link, data) {
+    // let data = {name:"business", type:0, Icon:"faGlobe"};
+    return axios.post(`/${link}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(response => {
+      console.log("successful post-request", response);
+    }).catch(function (error) {
+      console.log("Sorry, something wrong. New data hasn't been added.", error);
+    });
+  }
+
+  //------ Functions to use externally
+
+  getDataFromDB() {
+    let userId = 1;//this.props.id;
+    return axios.get(`/getData/${userId}`)
+  }
+
+  getCategoriesFromDB() {
+    //return this.getRequests("categories");
+    return axios.get(`/categories`)
+  }
+
+  addCategory = () => {
+    this.postRequests("category", { name: "business", type: 0, Icon: "faGlobe" });
+  }
+  addRecord = (newRecord) => {
+     /* newRecord: { userId: 1, date: "2018-08-30",type: 1,categoryId: 1,paymentMethod: 0,amount: 100,currency: 'USD',comment: "nice"}*/
+    let userId = 1;
+    newRecord.userId = 1;
+    return this.postRequests("record", newRecord);
+  }
+
+  deleteRecord = (id) => {
+    //let id = 10;
+    return this.deleteRequests("record", id);
+  }
+  deleteCategory = () => {
+    let id = 8;
+    this.deleteRequests("category", id);
+  }
+  editCategories = () => {
+    this.putRequests("category", { id: 13, name: "sport", type: 0, Icon: "faSport" });
+  }
+  editRecord = (newRecord) => {
+    let userId = 1;
+    newRecord.userId = 1;
+    return this.putRequests("record",newRecord);
+  }
 
 }
 
-const axiosFuncs = new AxiosFunc();
+const AxiosFuncs = new AxiosFuncClass();
 
-export default axiosFuncs;
+export default AxiosFuncs;
 
 
-
-//   <button type="button" onClick={this.deleteCategory}>deleteCategory</button>
-
-//   {/* <button type="button" onClick={this.deleteRecord}>deleteRecord</button> */}
-//   //<button type="button" onClick={this.updateRecord}>updateRecord</button>
-//   {/* <button type="button" onClick={this.addRecord}>addRecord</button> */}
-//   {/* <button type="button" onClick={this.updateCategories}>updateCategory</button> */}
-//   {/* <button type="button" onClick={this.getCategories}>getCategory</button> */}
-//   {/* <button type="button" onClick={this.addCategory}>addCategory</button> */}
