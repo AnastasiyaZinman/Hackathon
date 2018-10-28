@@ -18,11 +18,11 @@ class Navbar extends Component {
                             </Link>
                             &nbsp;|&nbsp; */}
                             <Link to="/login" className="btn btn-link text-secondary">
-                                <span className="text-secondary">login</span>
+                                <span className="text-white">login</span>
                             </Link>
                             &nbsp;|&nbsp;
                             <Link to="/signup" className="btn btn-link text-secondary">
-                                <span className="text-secondary">signup</span>
+                                <span className="text-white">signup</span>
                             </Link>
                         </div>)
                     

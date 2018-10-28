@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import Chart1 from './chart1'
 import Chart2 from './chart2'
 import Chart3 from './chart3'
+import ChartYearCategories from './ChartYearCategories'
 import axios from 'axios'
 @inject("store")
 @observer
@@ -26,8 +27,8 @@ class Charts extends Component {
               CHARTS
               {/* <Chart1 allRecords={this.state.allRecords} /> */}
               <Chart3  />
-
-              <Chart2 />
+              <ChartYearCategories />
+              {/* <Chart2 /> */}
             </div>
         )
 

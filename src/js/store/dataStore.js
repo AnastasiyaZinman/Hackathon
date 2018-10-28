@@ -1,6 +1,8 @@
 import { observable, action, computed, reaction } from "mobx";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+const key='d808c36e40546d97843e42050e80a2a7';
+const monthNames = {'1':"Jan", '2':"Feb", '3':"Mar", '4':"Apr", '5':"May", '6':"Jun", '7':"Jul", '8':"Aug", '9':"Sept", '10':"Oct", '11':"Nov", '12':"Dec"};
 class DataStore {
 	@observable username = "";
 	// @observable password="";
@@ -11,7 +13,13 @@ class DataStore {
 	@observable errorMessage = "";
 	@observable allRecords = [];
 	@observable dataExpense = [];
+	@observable dataExpenseIncomeYear = [];
 	@observable limitation = 2000;
+	// @observable currency ="NIS";
+	// @observable cFrom="";
+	// @observable cTo="";
+	// @observable cAmount="";
+
 	// @observable  currentUserIdForAddChild= {};
 
 	@action getDataFromDB = () => {
@@ -70,14 +78,50 @@ class DataStore {
 		// this.setState({dataExpense: categoryAmount, dataIncome: income})
 		// return categoryAmount;
 	}
+
 	getDataForCharts = reaction(
         () => (this.allRecords),
         records => {
             if (records.length) {
-                this.generateNewData();
+				this.generateNewData();
+				this.generateNewDataYear();
             }
         }
-    );
+	);
+	
+	@action generateNewDataYear = () => {
+		let data = this.allRecords;
+        let resultArray = [], monthAmount = {}, monthAmountIncome = {};
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        for (let i = 0; i < data.length; i++) {
+            let clientTime = new Date(data[i].date);
+            if (clientTime.getFullYear() === currentYear) {
+                let recMonth = clientTime.getMonth();
+                if (data[i].type === 0) {
+                    monthAmount[recMonth] = (monthAmount[recMonth] !== undefined) ?
+                        monthAmount[recMonth] + data[i]["amount"] : 0;
+                }
+                else {
+                    monthAmountIncome[recMonth] = (monthAmountIncome[recMonth] !== undefined) ?
+                        monthAmountIncome[recMonth] + data[i]["amount"] : 0;
+                }
+            }
+        }
+        console.log("monthAmount",monthAmount);
+        console.log("monthAmountIncome",monthAmountIncome);
+        for (let m = 1; m <= 12; m++) {
+            let current_month=monthNames[m];
+            let result = {
+                "name": current_month, 
+                "expense": monthAmount[m] ,
+                "income": monthAmountIncome[m]
+            }
+            resultArray.push(result);
+        }
+    console.log("resultArray", resultArray);
+     this.dataExpenseIncomeYear=resultArray 
+	}
 
 	// @action closeUpdateModal = () => {
 	// 	this.showComponent = false;
@@ -88,6 +132,16 @@ class DataStore {
 		console.log(this.users);
 	}
 
+	@action convertCurrency = () =>{
+			let currency=this.currency
+			return axios.get(`http://data.fixer.io/api/convert?access_key=${key}&from=${this.cFrom}&to=${this.cTo}&amount=${this.cAmount}`)
+			  .then(result => {
+				console.log(result);
+			  })
+			  .catch(function (error) {
+				console.log("Sorry, something wrong. Get request failed", error);
+			  });		
+	}
 }
 
 const store = new DataStore();

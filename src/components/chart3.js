@@ -18,14 +18,7 @@ class Chart3 extends Component {
         console.log(e.target.name)
         this.setState({ [e.target.name]: e.target.value });
     }
-
-
-
-
-
-
     render() {
-
         return (
             <div>
                 {/* {this.getOptions}    */}
