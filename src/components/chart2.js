@@ -33,6 +33,30 @@ class CustomizedDot extends Component {
     }
   };
  
+  // createSalesInLastThirtyDaysData = (data) => {
+  //   let resultArray = [];
+  //   let today = new Date();
+  //   let year = today.getFullYear();
+  //   let month = today.getMonth();
+  //   let date = today.getDate();
+  //   for (let i = 0; i < 30; i++) {
+  //     let day = new Date(year, month, date - i);
+  //     // console.log(day);
+  //     let daySales = 0;
+  //     for (let j = 0; j < data.length; j++) {
+  //       let clientTime = new Date(data[j].firstContact);
+  //       if (clientTime.getFullYear() === day.getFullYear() && clientTime.getMonth() === day.getMonth() && clientTime.getDate() === day.getDate()) {
+  //         daySales = daySales + 1;
+  //       }
+  //     }
+  //     let result = {
+  //       day, daySales
+  //     }
+  //     resultArray.push(result);
+  //   }
+  //   this.setState({ salesByDate: resultArray })
+  //   // console.log(resultArray);
+  // }
 
 
 class Chart2 extends Component {

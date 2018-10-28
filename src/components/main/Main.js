@@ -76,7 +76,7 @@ class Main extends Component {
 
   showNavBar = () =>
     <ul id="nav-bar">
-      <li><Link to="/"><span>Records</span></Link></li>
+      <li><Link to="/main"><span>Records</span></Link></li>
       <li><Link to="/statistics"><span>Statistics</span></Link></li>
     </ul>
 

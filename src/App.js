@@ -8,6 +8,7 @@ import Main from './components/main/Main'
 import LoginForm from './components/login'
 import Navbar from './components/navbar'
 import Home from './components/home'
+import Charts from './components/charts'
 import Registration from './components/registration'
 
 @inject("store")
@@ -37,6 +38,7 @@ class App extends Component {
         <Route path="/signup" render={() => <Registration />}/>
         <Route path="/login" render={() => <LoginForm />}/>
         <Route path="/main" render={() => <Main logout={this.props.store.logout} loggedIn={this.props.store.loggedIn} id={this.props.store.id}/>}/> 
+        <Route path="/statistics" render={() => <Charts />}/>
       </div>
       </Router>
     );
