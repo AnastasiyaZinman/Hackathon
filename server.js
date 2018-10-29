@@ -3,7 +3,13 @@ const bodyParser = require('body-parser');
 const api = require('./serverApis/usersApi')
 // const router = express.Router();
 var app = express();
-
+//----------------------------
+if (app.get('env') === 'development') {
+	require('dotenv').load();
+	const cors = require('cors');
+	app.use(cors());
+}
+//----------------------------
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
@@ -20,7 +26,12 @@ app.use('/', api)
 
 const SERVER_PORT=5001;
 //-------------------------
-
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, 'build')));
+	app.get('*', function (req, res) {
+		res.sendFile(path.join(__dirname, 'build', 'index.html'));
+	});
+}
 //-------------------------------------------
 app.get('/', function (req, res) {
     res.send('Hello World!');
