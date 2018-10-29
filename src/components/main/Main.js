@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+
 import moment, { updateLocale } from 'moment';
 import AxiosFuncs from './AxiosFuncs';
-
 import AddForm from './AddForm';
 import EditForm from './EditForm';
 import DeleteForm from './DeleteForm';
@@ -26,8 +25,8 @@ class Main extends Component {
       isLoading: true,
       allRecords: "",
       textTosearch: "",
-      startDate: "",
-      endDate: "",
+      startDate: "2018-01-01",
+      endDate: "2018-09-29",
       currentPage: 1,
       showAddForm: false,
       recordIdToEdit: -1, // if -1 nothing to edit,
@@ -42,8 +41,9 @@ class Main extends Component {
 
   getRecords =() => {
     AxiosFuncs.getDataFromDB().then(result => {
-      this.setState({ allRecords: result.data[0].record });
-      this.setState({ isLoading: false })
+      let allRecords = result.data[0].record
+      allRecords.sort((a, b) => (new Date(b.date) - new Date(a.date)));
+      this.setState({ allRecords, isLoading: false });
     }).catch(function (error) {
       console.log(error);
     })
@@ -59,23 +59,11 @@ class Main extends Component {
     this.setState({ currentPage })
     this.getCurrentRecords();
   }
-  changeLimitation = () => {
-    // let userId = 1;
-    // newRecord.userId = 1;
-    let data={id:this.props.store.id, limitation: this.props.store.limitation};
-    AxiosFuncs.putRequests("limitation", data);
-  }
+  
 
   /******Show Components *****/
   showLoader = () => this.state.isLoading ? <div className="loading"> <img src={loader} /></div> : null
 
-  showNavBar = () =>
-    <ul id="nav-bar">
-      <li><Link to="/"><span>Records</span></Link></li>
-      <li><Link to="/statistics"><span>Charts</span></Link></li>
-  
-      <button type="button" onClick={this.changeLimitation}>Add limit</button>
-    </ul>
 
   showHeader = () => <div id="grid-header">
     {this.fields.map((f, i) => <div key={i}>{f}</div>)}
@@ -84,7 +72,7 @@ class Main extends Component {
   showSearchBar = () => <div className="search-bar">
     From: <input type="date" name="startDate" value={this.state.startDate} onChange={this.changeInput}></input><span> </span>
     To: <input type="date" name="endDate" value={this.state.endDate} onChange={this.changeInput}></input><span> </span>
-    <input type="text" placeholder="Search" name="textTosearch" value={this.state.textTosearch} onChange={this.changeInput}></input>
+    <input type="text"  placeholder="Search by comment" name="textTosearch" value={this.state.textTosearch} onChange={this.changeInput}></input>
   </div>
 
   showPagination = (startIndex, endIndex, lastPage) =>
@@ -105,7 +93,7 @@ class Main extends Component {
   /***** Get Record Components */
   getCurrentRecords = () => {
     let records = [...this.state.allRecords]
-    let startIndex = (this.state.currentPage - 1) * ITEMSPERPAGE
+    let startIndex = (this.state.currentPage - 1) * ITEMSPERPAGE + 1
     let endIndex = startIndex + ITEMSPERPAGE - 1
     records = records.filter(c =>
       (c["comment"].toLowerCase().includes(this.state.textTosearch.toLowerCase()))
@@ -113,7 +101,7 @@ class Main extends Component {
       && (c.date <= this.state.endDate || this.state.endDate === "")
     )
     let lastPage = Math.ceil(records.length / ITEMSPERPAGE)
-    records = records.slice(startIndex, endIndex + 1)
+    records = records.slice(startIndex - 1, endIndex )
     return { records, startIndex, endIndex, lastPage }
   }
 
@@ -150,11 +138,12 @@ class Main extends Component {
 
   render() {
     let { records, startIndex, endIndex, lastPage } = this.getCurrentRecords()
-
     return (
+      
       <div>
-        <div className="App">
-          {this.showNavBar()}
+         {(this.props.store.loggedIn) ?  (
+        <div><div className="App">
+          {this.props.store.showNavBar()}
           <div className="container">
             <div className="row-bar">
               {this.showSearchBar()}
@@ -168,6 +157,8 @@ class Main extends Component {
           </div>
         </div>
         <div className="dot"> <FontAwesomeIcon size='6x' onClick={() => this.showAddForm()} icon="plus" /></div>
+      </div>)
+      :null}
       </div>
     )
   }

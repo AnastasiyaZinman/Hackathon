@@ -1,5 +1,8 @@
+import React, { Component } from 'react';
 import { observable, action, computed, reaction } from "mobx";
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import axios from 'axios';
+import AxiosFuncs from '../../components/main/AxiosFuncs';
 import { Redirect } from 'react-router-dom';
 const key='d808c36e40546d97843e42050e80a2a7';
 const monthNames = {'1':"Jan", '2':"Feb", '3':"Mar", '4':"Apr", '5':"May", '6':"Jun", '7':"Jul", '8':"Aug", '9':"Sept", '10':"Oct", '11':"Nov", '12':"Dec"};
@@ -33,7 +36,7 @@ class DataStore {
 				this.isLoading = false;
 			})
 	}
-zz
+
 	@action logout = () => {
 		console.log("close");
 		this.loggedIn = false;
@@ -88,7 +91,20 @@ zz
             }
         }
 	);
+	@action showNavBar = () =>
+    <ul id="nav-bar">
+      <li><Link to="/main"><span>RECORDS</span></Link></li>
+      <li><Link to="/statistics"><span>STATISTIC</span></Link></li>
+      {/* <button type="button" onClick={this.changeLimitation}>Add limit</button> */}
+    </ul>
 	
+	@action changeLimitation = () => {
+		// let userId = 1;
+		// newRecord.userId = 1;
+		let data={id:this.props.store.id, limitation: this.props.store.limitation};
+		AxiosFuncs.putRequests("limitation", data);
+	  } 
+
 	@action generateNewDataYear = () => {
 		let data = this.allRecords;
         let resultArray = [], monthAmount = {}, monthAmountIncome = {};

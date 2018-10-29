@@ -73,8 +73,8 @@ class Chart1 extends Component {
               <BarChart width={600} height={300} data={data}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <XAxis dataKey="name" stroke="white"/>
+                    <YAxis stroke="white"/>
                     <Tooltip />
                     <Legend />
                     {/* <Bar dataKey="amount" stackId="a" fill="#8884d8" /> */}

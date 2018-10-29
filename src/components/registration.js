@@ -85,7 +85,7 @@ class Registration extends Component {
                <div className="col-4 ">
                 Password:</div>
                 <div className="col-8">
-                 <input className="inp-reg" type="password" id="password" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
+                 <input className="inp-reg" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} />
                </div> </div>
                
             <button className="button button-reg" onClick={this.sendNewUserData}><span>Sign Up</span></button>

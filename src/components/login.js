@@ -84,7 +84,7 @@ class LoginForm extends Component {
                     <div className="col-6">col</div>
                     <div className="col-6">col</div>
                 </div> */}
-
+                    
                 <FontAwesomeIcon style={{ color: "white" }} className="fas" icon={faGlobe} size="6x" />
                
                 <h3 className="text-center">Log In</h3>
@@ -97,7 +97,7 @@ class LoginForm extends Component {
                <div className="col-4 ">
                 Password:</div>
                 <div className="col-8">
-                <input type="password" className="inp-reg" id="passwordLogIn" name="password" placeholder="password" value={this.state.password} onChange={this.handleChange} />
+                <input type="password" className="inp-reg" id="passwordLogIn" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} />
                 </div> </div>
                 
             <button className="button button-reg" onClick={this.logIn}><span>Log In</span></button>

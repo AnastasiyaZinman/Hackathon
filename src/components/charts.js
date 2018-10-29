@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react';
-import Chart1 from './chart1'
-import Chart2 from './chart2'
-import Chart3 from './chart3'
+import LogIn from './login'
+import './charts/charts.css';
+import ChartCategoriesExpenses from './chart3'
 import ChartYearCategories from './ChartYearCategories'
 import axios from 'axios'
 @inject("store")
@@ -24,16 +24,22 @@ class Charts extends Component {
         console.log("loggedIn",this.props.store.loggedIn);
         
         return (
-            <div>
-              {(this.props.store.loggedIn) ? 
-              (<div>
-              <Chart3  />
-              <ChartYearCategories /></div>)
-            :
-            null
-            }
+            <div className="App">
+              {(this.props.store.loggedIn) ?  (
+              <div >
+               {this.props.store.showNavBar()}
+                <h1>Statistics</h1>
+              <div className="charts-box">
+              <ChartCategoriesExpenses  />
+              <ChartYearCategories />
+             </div>
+             </div>
+               )
+             : 
+             null
+              }           
         
-            </div>
+             </div>
         )
 
     }
