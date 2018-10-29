@@ -26,7 +26,7 @@ class Main extends Component {
       allRecords: "",
       textTosearch: "",
       startDate: "2018-01-01",
-      endDate: "2018-09-29",
+      endDate: "2018-10-29",
       currentPage: 1,
       showAddForm: false,
       recordIdToEdit: -1, // if -1 nothing to edit,

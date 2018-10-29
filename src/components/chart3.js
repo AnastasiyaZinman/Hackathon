@@ -38,7 +38,7 @@ class ChartCategoriesExpenses extends Component {
                         <option key="21" value={this.state.year}>year</option>
                         <option key="22" value={this.state.month}>{this.state.year}</option>
                     </select> */}
-                    Expenses per Year
+                   <h3>Expenses per Year</h3> 
                 <BarChart width={700} height={300} data={this.props.store.dataExpense}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />

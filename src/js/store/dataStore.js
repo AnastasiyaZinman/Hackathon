@@ -95,7 +95,9 @@ class DataStore {
     <ul id="nav-bar">
       <li><Link to="/main"><span>RECORDS</span></Link></li>
       <li><Link to="/statistics"><span>STATISTIC</span></Link></li>
-      {/* <button type="button" onClick={this.changeLimitation}>Add limit</button> */}
+	  
+	  <div className="text-right"><Link to="/"><span onClick={this.logout}>LOGOUT</span></Link></div>
+	   {/* <button type="button" onClick={this.changeLimitation}>Add limit</button> */}
     </ul>
 	
 	@action changeLimitation = () => {

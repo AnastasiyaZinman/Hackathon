@@ -31,7 +31,7 @@ render() {
 
     return (
         <div>
-        Expenses And Income per Year
+       <h3> Expenses And Income per Year</h3>
               <LineChart width={600} height={300} data={this.props.store.dataExpenseIncomeYear}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <XAxis dataKey="name" stroke="white"/>
