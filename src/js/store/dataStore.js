@@ -33,7 +33,7 @@ class DataStore {
 				this.isLoading = false;
 			})
 	}
-
+zz
 	@action logout = () => {
 		console.log("close");
 		this.loggedIn = false;
@@ -97,14 +97,16 @@ class DataStore {
         for (let i = 0; i < data.length; i++) {
             let clientTime = new Date(data[i].date);
             if (clientTime.getFullYear() === currentYear) {
-                let recMonth = clientTime.getMonth();
+				let recMonth = clientTime.getMonth();
+				console.log("data type",data[i].type);
                 if (data[i].type === 0) {
                     monthAmount[recMonth] = (monthAmount[recMonth] !== undefined) ?
-                        monthAmount[recMonth] + data[i]["amount"] : 0;
+                        monthAmount[recMonth] + data[i]["amount"] : data[i]["amount"];
                 }
                 else {
+					debugger;
                     monthAmountIncome[recMonth] = (monthAmountIncome[recMonth] !== undefined) ?
-                        monthAmountIncome[recMonth] + data[i]["amount"] : 0;
+                        monthAmountIncome[recMonth] + data[i]["amount"] : data[i]["amount"];
                 }
             }
         }

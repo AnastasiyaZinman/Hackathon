@@ -21,14 +21,18 @@ class Charts extends Component {
       
     render() { 
         console.log('this state', this.props.store.allRecords);
+        console.log("loggedIn",this.props.store.loggedIn);
         
         return (
             <div>
-              CHARTS
-              {/* <Chart1 allRecords={this.state.allRecords} /> */}
+              {(this.props.store.loggedIn) ? 
+              (<div>
               <Chart3  />
-              <ChartYearCategories />
-              {/* <Chart2 /> */}
+              <ChartYearCategories /></div>)
+            :
+            null
+            }
+        
             </div>
         )
 
